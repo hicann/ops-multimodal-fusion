@@ -1,0 +1,25 @@
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Compiled extensions
+*.so
+*.abi3.so
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# pytest
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OpenCode / Claude config
+.opencode/
+.claude/
+.arts/
