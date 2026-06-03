@@ -64,7 +64,9 @@ result = torch.ops.ops_multimodal_fusion.abs(x)
 
 ## 相关信息
 
+- [快速入门](docs/QUICKSTART.md)
 - [目录结构](docs/dir_structure.md)
+- [接口列表](docs/zh/api_list.md)
 - [贡献指南](CONTRIBUTING.md)
 - [安全声明](SECURITY.md)
 - [许可证](LICENSE)

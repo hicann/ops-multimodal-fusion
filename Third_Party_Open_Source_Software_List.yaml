@@ -1,0 +1,14 @@
+pytest:
+  version: 7.4.0
+  license: MIT
+  path: tests/
+
+numpy:
+  version: 1.26.x
+  license: BSD-3-Clause
+  path: requirements.txt
+
+pyyaml:
+  version: 6.0.x
+  license: MIT
+  path: requirements.txt
