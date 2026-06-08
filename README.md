@@ -32,8 +32,10 @@ bash build.sh --soc=${soc_version}
 
 ### 安装
 
+> **注意**：请勿在源码目录内执行 pip install，否则可能导致卸载异常。
+
 ```bash
-pip install /path/to/dist/ops_multimodal_fusion-1.0.0-cp38-abi3-*.whl --force-reinstall --no-deps
+cd /tmp && pip install /path/to/dist/ops_multimodal_fusion-*.whl --force-reinstall --no-deps
 ```
 
 ## 测试

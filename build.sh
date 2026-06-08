@@ -169,7 +169,7 @@ build_wheel() {
     echo "  ${wheel}"
     echo
     echo "Install it with:"
-    echo "  pip install \"${wheel}\" --force-reinstall --no-deps"
+    echo "  cd /tmp && pip install \"${wheel}\" --force-reinstall --no-deps"
     echo
     echo "Run tests after install (optional):"
     echo "  pytest tests/ -v"
