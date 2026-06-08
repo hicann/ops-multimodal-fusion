@@ -10,6 +10,7 @@
 # See LICENSE in the root of the software repository for the full text of the License.
 
 import os
+import sys
 import shutil
 import subprocess
 import logging
@@ -18,7 +19,9 @@ from wheel.bdist_wheel import bdist_wheel
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 PACKAGE_NAME = "ops_multimodal_fusion"
-VERSION = "1.0.0"
+_BASE_VERSION = "1.0.0"
+_soc = os.environ.get("SOC", "")
+VERSION = f"{_BASE_VERSION}+{_soc}" if _soc else _BASE_VERSION
 DESCRIPTION = "PyTorch Ascend C operator extensions"
 
 
@@ -63,12 +66,12 @@ class BinaryDistribution(Distribution):
 
 class ABI3Wheel(bdist_wheel):
     """
-    Force to use abi3 tag for wheel, this wheel supports multiple python versions >= 3.8
+    Force to use actual python version tag for wheel, e.g. cp310-cp310
     """
     def get_tag(self):
         python, abi, plat = super().get_tag()
-        python = "cp38"
-        abi = "abi3"
+        python = f"cp{sys.version_info.major}{sys.version_info.minor}"
+        abi = python
         return python, abi, plat
 
     def run(self):

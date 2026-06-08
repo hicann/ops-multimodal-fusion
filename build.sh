@@ -151,7 +151,7 @@ build_wheel() {
 
     echo "Building the wheel..."
     python3 setup.py clean
-    NPU_ARCH="$NPU_ARCH" ARCH_DIR="$ARCH_DIR" python3 -m build --wheel --no-isolation
+    NPU_ARCH="$NPU_ARCH" ARCH_DIR="$ARCH_DIR" SOC="$SOC" python3 -m build --wheel --no-isolation
 
     local wheel
     wheel="$(ls -t dist/*.whl 2>/dev/null | head -n 1 || true)"

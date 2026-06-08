@@ -1,0 +1,350 @@
+#!/bin/bash
+# ============================================================================
+# Copyright (c) 2025-2026 Huawei Technologies Co., Ltd.
+# This program is free software, you can redistribute it and/or modify it under the terms and conditions of
+# CANN Open Software License Agreement Version 2.0 (the "License").
+# Please refer to the License for details. You may not use this file except in compliance with the License.
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+# See LICENSE in the root of the software repository for the full text of the License.
+# ============================================================================
+
+set -euo pipefail
+
+run_command() {
+    local cmd="$*"
+    echo "Executing command: $cmd"
+
+    if ! output=$("$@" 2>&1); then
+         local exit_code=$?
+         echo -e "\nCommand execution failed!"
+         echo -e "\nFailed command: $cmd"
+         echo -e "\nError output: $output"
+         echo -e "\nExit code: $exit_code"
+         exit $exit_code
+    fi
+}
+
+version_ge() {
+    # Version comparison, format: xx.xx.xx
+    IFS='.' read -r -a curr_arr <<< "$1"
+    IFS='.' read -r -a req_arr <<< "$2"
+
+    for ((i=0; i<${#req_arr[@]}; i++)); do
+        curr=${curr_arr[i]:-0}
+        req=${req_arr[i]}
+        if (( curr > req )); then
+            return 0
+        elif (( curr < req )); then
+            return 1
+        fi
+    done
+    return 0
+}
+
+debian_gcc_pkg_available() {
+    local ver="$1"
+    apt-cache show "gcc-${ver}" &>/dev/null || return 1
+    local candidate
+    candidate=$(apt-cache policy "gcc-${ver}" 2>/dev/null | awk '/Candidate:/ {print $2}')
+    [[ -n "$candidate" && "$candidate" != "(none)" ]]
+}
+
+debian_gcc_max_alternative_priority() {
+    local max_pri=0
+    local query_out
+    if ! query_out=$(update-alternatives --query gcc 2>/dev/null); then
+        echo 0
+        return 0
+    fi
+    max_pri=$(echo "$query_out" | awk '
+        /[Pp]riority:/ {
+            line = $0
+            sub(/.*[Pp]riority:[[:space:]]*/, "", line)
+            if ((line + 0) > m) m = line + 0
+        }
+        END { print m + 0 }
+    ')
+    echo "${max_pri:-0}"
+}
+
+debian_set_gcc_alternative() {
+    local ver="$1"
+    local gcc_path="/usr/bin/gcc-${ver}"
+    local gpp_path="/usr/bin/g++-${ver}"
+    local max_pri new_pri
+
+    max_pri=$(debian_gcc_max_alternative_priority)
+    new_pri=$((max_pri + 1))
+    echo "Registering ${gcc_path} with priority ${new_pri} (current max: ${max_pri})"
+
+    run_command sudo update-alternatives --install /usr/bin/gcc gcc "$gcc_path" "$new_pri" \
+        --slave /usr/bin/g++ g++ "$gpp_path"
+    run_command sudo update-alternatives --set gcc "$gcc_path"
+}
+
+install_gcc_debian() {
+    local req_ver="$1"
+    run_command sudo $PKG_MANAGER update
+    run_command sudo $PKG_MANAGER install -y gcc g++ build-essential
+
+    if command -v gcc &> /dev/null; then
+        local curr_ver
+        curr_ver=$(gcc --version | awk '/^gcc/ {print $NF}')
+        if version_ge "$curr_ver" "$req_ver"; then
+            echo "GCC installed via gcc/g++ packages ($curr_ver)"
+            return 0
+        fi
+    fi
+
+    echo "Trying versioned GCC packages (gcc >= ${req_ver})..."
+    local ver gcc_path installed_ver
+    for ver in 14 13 12 11 10 9 8 7; do
+        if ! debian_gcc_pkg_available "$ver"; then
+            continue
+        fi
+        run_command sudo $PKG_MANAGER install -y "gcc-${ver}" "g++-${ver}"
+        gcc_path="/usr/bin/gcc-${ver}"
+        if [[ ! -x "$gcc_path" ]]; then
+            continue
+        fi
+        installed_ver=$("$gcc_path" --version | awk '/^gcc/ {print $NF}')
+        if ! version_ge "$installed_ver" "$req_ver"; then
+            echo "gcc-${ver} is ${installed_ver} (< ${req_ver}), trying next..."
+            continue
+        fi
+        debian_set_gcc_alternative "$ver"
+        echo "GCC set to ${installed_ver} via ${gcc_path}"
+        return 0
+    done
+
+    echo "No GCC package found that meets version >= ${req_ver}. Please install manually."
+    exit 1
+}
+
+detect_os() {
+    # OS detection, supports debian (uses apt), rhel (uses dnf or yum), macos
+    if [[ "$(uname -s)" == "Linux" ]]; then
+        if [[ -f /etc/debian_version ]]; then
+            OS="debian"
+            PKG_MANAGER="apt"
+        elif [[ -f /etc/redhat-release ]]; then
+            OS="rhel"
+            if command -v dnf &> /dev/null; then
+                PKG_MANAGER="dnf"
+            else
+                PKG_MANAGER="yum"
+            fi
+        elif grep -qE '^NAME="openEuler"$|^NAME="EulerOS"$' /etc/os-release 2>/dev/null; then
+            OS="euler"
+            PKG_MANAGER="dnf"
+        else
+            echo "Unsupported Linux distribution, please install manually"
+            exit 1
+        fi
+    elif [[ "$(uname -s)" == "Darwin" ]]; then
+        OS="macos"
+        if ! command -v brew &> /dev/null; then
+            echo "Please install Homebrew first"
+            exit 1
+        fi
+        PKG_MANAGER="brew"
+    else
+        echo "Unsupported OS type, please install manually"
+        exit 1
+    fi
+}
+
+install_python() {
+    # Python version >= 3.8.0
+    echo -e "\n==== Checking Python ===="
+    local req_ver="3.8.0"
+    local curr_ver=""
+
+    if command -v python3 &> /dev/null; then
+        curr_ver=$(python3 --version 2>&1 | awk '{print $2}')
+        echo "Current Python version: $curr_ver"
+        if version_ge "$curr_ver" "$req_ver"; then
+            echo "Python version meets requirements"
+            return
+        fi
+    fi
+    echo "Installing Python..."
+    case "$OS" in
+        debian)
+            run_command sudo $PKG_MANAGER update
+            run_command sudo $PKG_MANAGER install -y python3 python3-pip python3-dev
+            ;;
+        rhel)
+            if grep -q "release 7" /etc/redhat-release; then
+                run_command sudo $PKG_MANAGER install -y centos-release-scl
+                run_command sudo $PKG_MANAGER install -y rh-python38 rh-python38-python-devel
+                run_command source /opt/rh/rh-python38/enable
+                echo "Need to execute 'source /opt/rh/rh-python38/enable' to activate python3.8"
+            else
+                run_command sudo $PKG_MANAGER install -y python3 python3-pip python3-devel
+            fi
+            ;;
+        macos)
+            run_command brew install python@3.10
+            echo 'export PATH="/usr/local/opt/python@3.10/bin:$PATH"' >> ~/.zshrc
+            run_command source ~/.zshrc
+            ;;
+        euler)
+            run_command sudo $PKG_MANAGER install -y python3 python3-pip python3-devel
+            ;;
+    esac
+
+    if command -v python3 &> /dev/null; then
+        curr_ver=$(python3 --version 2>&1 | awk '{print $2}')
+        if version_ge "$curr_ver" "$req_ver"; then
+            echo "Python installed successfully ($curr_ver)"
+        else
+            echo "Python version still doesn't meet requirements, please install manually"
+            exit 1
+        fi
+    else
+        echo "Python installation failed"
+        exit 1
+    fi
+}
+
+install_gcc() {
+    # GCC version >= 7.3.0
+    echo -e "\n==== Checking GCC ===="
+    local req_ver="7.3.0"
+    local curr_ver=""
+
+    if command -v gcc &> /dev/null; then
+        curr_ver=$(gcc --version | awk '/^gcc/ {print $NF}')
+    elif command -v g++ &> /dev/null; then
+        curr_ver=$(g++ --version | awk '/^g\+\+/ {print $NF}')
+    else
+        curr_ver="0.0.0"
+    fi
+    echo "Current GCC version: $curr_ver"
+    if version_ge "$curr_ver" "$req_ver"; then
+        echo "GCC version meets requirements ($curr_ver)"
+        return
+    fi
+
+    echo "Installing GCC..."
+    case "$OS" in
+        debian)
+            install_gcc_debian "$req_ver"
+            ;;
+        rhel)
+            if grep -q "release 7" /etc/redhat-release; then
+                run_command sudo $PKG_MANAGER install -y centos-release-scl
+                run_command sudo $PKG_MANAGER install -y devtoolset-9-gcc devtoolset-9-gcc-c++
+                run_command source /opt/rh/devtoolset-9/enable
+                echo "Need to execute 'source /opt/rh/devtoolset-9/enable' to activate GCC9"
+            else
+                run_command sudo $PKG_MANAGER install -y gcc gcc-c++
+            fi
+            ;;
+        macos)
+            if ! xcode-select -p &> /dev/null; then
+                xcode-select --install
+            fi
+            run_command brew install gcc@11
+            echo 'export CC=/usr/local/bin/gcc-11' >> ~/.zshrc
+            echo 'export CXX=/usr/local/bin/g++-11' >> ~/.zshrc
+            run_command source ~/.zshrc
+            ;;
+        euler)
+            run_command sudo $PKG_MANAGER install -y gcc gcc-c++
+            ;;
+    esac
+
+    if command -v gcc &> /dev/null; then
+        curr_ver=$(gcc --version | awk '/^gcc/ {print $NF}')
+        if version_ge "$curr_ver" "$req_ver"; then
+            echo "GCC installed successfully ($curr_ver)"
+        else
+            echo "GCC version still doesn't meet requirements, please install manually."
+            exit 1
+        fi
+    else
+        echo "GCC installation failed"
+        exit 1
+    fi
+}
+
+install_cmake() {
+    # CMake version >= 3.16.0
+    echo -e "\n==== Checking CMake ===="
+    local req_ver="3.16.0"
+    local curr_ver=""
+
+    if command -v cmake &> /dev/null; then
+        curr_ver=$(cmake --version | awk '/^cmake/ {print $3}')
+        echo "Current CMake version: $curr_ver"
+        if version_ge "$curr_ver" "$req_ver"; then
+            echo "CMake meets requirements"
+            return
+        fi
+    fi
+
+    echo "Installing CMake..."
+    case "$OS" in
+        debian)
+            if grep -q "Ubuntu 18.04" /etc/os-release; then
+                run_command wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+                run_command echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
+                run_command sudo apt update
+                run_command sudo apt install -y cmake make
+            else
+                run_command sudo $PKG_MANAGER update
+                run_command sudo $PKG_MANAGER install -y cmake make
+            fi
+            ;;
+        rhel)
+            if grep -q "release 7" /etc/redhat-release; then
+                run_command sudo $PKG_MANAGER install -y epel-release
+                run_command sudo $PKG_MANAGER install -y cmake3 make
+                run_command sudo ln -s /usr/bin/cmake3 /usr/bin/cmake
+            else
+                run_command sudo $PKG_MANAGER install -y cmake make
+            fi
+            ;;
+        macos)
+            run_command brew install cmake
+            ;;
+        euler)
+            run_command sudo $PKG_MANAGER install -y cmake make
+            ;;
+    esac
+
+    if command -v cmake &> /dev/null; then
+        curr_ver=$(cmake --version | awk '/^cmake/ {print $3}')
+        if version_ge "$curr_ver" "$req_ver"; then
+            echo "CMake installed successfully ($curr_ver)"
+        else
+            echo "CMake version still doesn't meet requirements, please install manually"
+            exit 1
+        fi
+    else
+        echo "CMake installation failed"
+        exit 1
+    fi
+}
+
+main() {
+    echo "===================================================="
+    echo "Starting project dependency installation"
+    echo "===================================================="
+
+    detect_os
+    install_python
+    install_gcc
+    install_cmake
+
+    echo -e "===================================================="
+    echo "All dependencies installed successfully!"
+    echo -e "===================================================="
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi

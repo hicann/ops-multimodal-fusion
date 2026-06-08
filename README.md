@@ -4,12 +4,9 @@
 
 ## 仓编译、安装方式
 
-### 环境要求
+### 环境部署
 
-- Python >= 3.8
-- PyTorch
-- torch_npu
-- CANN 工具链（Ascend Toolkit，含 Bisheng 编译器）
+详见[环境部署](docs/zh/install/quick_install.md)。
 
 ### 编译
 
@@ -31,7 +28,7 @@ bash build.sh
 bash build.sh --soc=${soc_version}
 ```
 
-编译产物为 `dist/ops_multimodal_fusion-1.0.0-cp38-abi3-*.whl`，使用 Python Stable ABI，兼容 Python 3.8+。
+编译产物为 `dist/ops_multimodal_fusion-1.0.0+<soc_version>-cp<编译环境Python版本>-cp<编译环境Python版本>-linux_*.whl`（如 `ops_multimodal_fusion-1.0.0+ascend950-cp310-cp310-linux_aarch64.whl`）。
 
 ### 安装
 
@@ -57,6 +54,10 @@ import ops_multimodal_fusion
 x = torch.randn(32, 64).npu()
 result = torch.ops.ops_multimodal_fusion.abs(x)
 ```
+
+## 接口支持清单
+
+详见[接口支持清单](docs/zh/op_support_list.md)。
 
 ## 开发方式
 
