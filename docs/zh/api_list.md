@@ -92,6 +92,72 @@ print(result.device)  # npu
 
 ---
 
+### 2.2 upsample_linear1d
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.upsample_linear1d(Tensor input, int output_size, bool align_corners=False, float scale=-1.) -> Tensor
+```
+
+#### 功能
+
+对 3-D 张量 `[N, C, W]` 在最后一维（宽度）上做一维线性插值上/下采样，语义对齐 `torch.nn.functional.interpolate(mode="linear")`。
+
+#### 参数说明
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `input` | Tensor | 输入张量，形状 `[N, C, W]`，支持 FP32、FP16 数据类型 |
+| `output_size` | int | 输出宽度 `OW`，必须为正 |
+| `align_corners` | bool | 线性插值的 align_corners 标志，默认 `False` |
+| `scale` | float | 缩放因子。默认 `-1.` 表示由 `output_size` 推导比例；传正值时按 PyTorch scale_factor 语义，且 `output_size` 须等于 `floor(W * scale)` |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 输出张量，形状 `[N, C, output_size]`，数据类型与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 调用示例
+
+```python
+import torch
+import torch_npu
+import ops_multimodal_fusion
+
+# 创建输入张量并移至 NPU
+x = torch.randn(2, 3, 5, dtype=torch.float32).npu()
+
+# 上采样到宽度 8
+result = torch.ops.ops_multimodal_fusion.upsample_linear1d(x, 8, False)
+
+print(result.shape)   # torch.Size([2, 3, 8])
+print(result.dtype)   # torch.float32
+```
+
+#### 源码位置
+
+- 算子实现：`applications/llm/upsample_linear1d/arch35/upsample_linear1d.asc`
+- 测试文件：`tests/upsample_linear1d/test_upsample_linear1d.py`
+
+---
+
 ## 3. 算子目录结构
 
 每个算子的典型目录结构如下：
