@@ -2,6 +2,59 @@
 
 基于 AscendC 的 PyTorch 自定义算子库，使用 fast kernel launch（`<<<>>>` 直调）方式实现高性能 NPU 算子，编译为 Python wheel 包供直接安装使用。
 
+## 版本配套
+
+当前仓库已验证通过的 CANN 版本如下：
+
+| CANN 版本 | 发布时间 | 分支 |
+| --- | --- | --- |
+| [CANN 9.0.0](https://www.hiascend.com/developer/download/community/result?module=cann&cann=9.0.0) | `2026/04/30` | master |
+
+请根据实际 CPU 架构和产品型号，从上述链接目录中自行选择对应的 `.run` 安装包。本仓库需要安装 **Toolkit 包** 和 **Ops 包**。
+
+安装包文件名格式如下：
+
+- Toolkit 包：
+  - `Ascend-cann-toolkit_${cann_version}_linux-aarch64.run`
+  - `Ascend-cann-toolkit_${cann_version}_linux-x86_64.run`
+- Ops 包：
+  - `Ascend-cann-${soc_name}-ops_${cann_version}_linux-aarch64.run`
+  - `Ascend-cann-${soc_name}-ops_${cann_version}_linux-x86_64.run`
+
+1. **安装 CANN Toolkit 包**
+
+    ```bash
+    # 确保安装包具有可执行权限
+    chmod +x Ascend-cann-toolkit_${cann_version}_linux-${arch}.run
+    # 安装命令
+    ./Ascend-cann-toolkit_${cann_version}_linux-${arch}.run --install --force --install-path=${install_path}
+    ```
+    - `${cann_version}`：表示安装包版本号，此处为 `9.0.0`。
+    - `${arch}`：表示 CPU 架构，如 `aarch64`、`x86_64`。
+    - `${install_path}`：表示指定安装路径，默认安装在 `/usr/local/Ascend` 目录。
+
+2. **安装 CANN Ops 包**
+
+    Ops 包需与 Toolkit 包安装到同一目录下，请根据实际产品型号选择对应的 Ops 包。
+
+    ```bash
+    # 确保安装包具有可执行权限
+    chmod +x Ascend-cann-${soc_name}-ops_${cann_version}_linux-${arch}.run
+    # 安装命令
+    ./Ascend-cann-${soc_name}-ops_${cann_version}_linux-${arch}.run --install --force --install-path=${install_path}
+    ```
+    - `${soc_name}`：表示 NPU 产品型号名称，请根据实际硬件选择，如 `950`、`910b` 等。
+
+3. **配置环境变量**
+
+   安装完成后，请执行：
+
+    ```bash
+    source ${install_path}/cann/set_env.sh
+    ```
+
+   请将 `${install_path}` 替换为 Toolkit 包的实际安装目录，例如 `/usr/local/Ascend` 或 `${HOME}/Ascend`。
+
 ## 仓编译、安装方式
 
 ### 环境部署
