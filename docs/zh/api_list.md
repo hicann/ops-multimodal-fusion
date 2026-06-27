@@ -26,7 +26,6 @@
 ---
 
 ## 2. 算子接口
-
 ### 2.1 abs
 
 #### 接口签名
@@ -91,7 +90,6 @@ print(result.device)  # npu
 - 测试文件：`tests/abs/test_abs.py`
 
 ---
-
 ### 2.2 adaptive_avg_pool2d
 
 #### 接口签名
@@ -138,7 +136,6 @@ torch.ops.ops_multimodal_fusion.adaptive_avg_pool2d(Tensor self, int[2] output_s
 - 测试文件：`tests/adaptive_avg_pool2d/test_adaptive_avg_pool2d.py`
 
 ---
-
 ### 2.3 angle
 
 #### 接口签名
@@ -184,7 +181,6 @@ torch.ops.ops_multimodal_fusion.angle(Tensor input) -> Tensor
 - 测试文件：`tests/angle/test_angle.py`
 
 ---
-
 ### 2.4 bessel_j0
 
 #### 接口签名
@@ -229,7 +225,6 @@ torch.ops.ops_multimodal_fusion.bessel_j0(Tensor x) -> Tensor
 - 测试文件：`tests/bessel_j0/test_bessel_j0.py`
 
 ---
-
 ### 2.5 bessel_j1
 
 #### 接口签名
@@ -274,7 +269,6 @@ torch.ops.ops_multimodal_fusion.bessel_j1(Tensor x) -> Tensor
 - 测试文件：`tests/bessel_j1/test_bessel_j1.py`
 
 ---
-
 ### 2.6 bessel_y0
 
 #### 接口签名
@@ -319,7 +313,6 @@ torch.ops.ops_multimodal_fusion.bessel_y0(Tensor x) -> Tensor
 - 测试文件：`tests/bessel_y0/test_bessel_y0.py`
 
 ---
-
 ### 2.7 bessel_y1
 
 #### 接口签名
@@ -364,7 +357,6 @@ torch.ops.ops_multimodal_fusion.bessel_y1(Tensor x) -> Tensor
 - 测试文件：`tests/bessel_y1/test_bessel_y1.py`
 
 ---
-
 ### 2.8 cauchy
 
 #### 接口签名
@@ -413,7 +405,6 @@ torch.ops.ops_multimodal_fusion.cauchy(Tensor x, float median=0.0, float sigma=1
 - 测试文件：`tests/cauchy/test_cauchy.py`
 
 ---
-
 ### 2.9 complex
 
 #### 接口签名
@@ -460,7 +451,6 @@ torch.ops.ops_multimodal_fusion.complex(Tensor real, Tensor imag) -> Tensor
 - 测试文件：`tests/complex/test_complex.py`
 
 ---
-
 ### 2.10 conjphysical
 
 #### 接口签名
@@ -506,7 +496,6 @@ torch.ops.ops_multimodal_fusion.conjphysical(Tensor x) -> Tensor
 - 测试文件：`tests/conjphysical/test_conjphysical.py`
 
 ---
-
 ### 2.11 cummax
 
 #### 接口签名
@@ -553,7 +542,6 @@ torch.ops.ops_multimodal_fusion.cummax(Tensor x, int dim) -> (Tensor values, Ten
 - 测试文件：`tests/cummax/test_cummax.py`
 
 ---
-
 ### 2.12 cumprod
 
 #### 接口签名
@@ -600,7 +588,6 @@ torch.ops.ops_multimodal_fusion.cumprod(Tensor x, int dim) -> Tensor
 - 测试文件：`tests/cumprod/test_cumprod.py`
 
 ---
-
 ### 2.13 depthwise_conv3d
 
 #### 接口签名
@@ -651,7 +638,6 @@ torch.ops.ops_multimodal_fusion.depthwise_conv3d(Tensor input, Tensor weight, Te
 - 测试文件：`tests/depthwise_conv3d/test_depthwise_conv3d.py`
 
 ---
-
 ### 2.14 digamma
 
 #### 接口签名
@@ -696,7 +682,6 @@ torch.ops.ops_multimodal_fusion.digamma(Tensor x) -> Tensor
 - 测试文件：`tests/digamma/test_digamma.py`
 
 ---
-
 ### 2.15 entr
 
 #### 接口签名
@@ -742,7 +727,6 @@ torch.ops.ops_multimodal_fusion.entr(Tensor x) -> Tensor
 - 测试文件：`tests/entr/test_entr.py`
 
 ---
-
 ### 2.16 erfcx
 
 #### 接口签名
@@ -787,7 +771,6 @@ torch.ops.ops_multimodal_fusion.erfcx(Tensor x) -> Tensor
 - 测试文件：`tests/erfcx/test_erfcx.py`
 
 ---
-
 ### 2.17 foreach_ceil
 
 #### 接口签名
@@ -833,7 +816,6 @@ torch.ops.ops_multimodal_fusion.foreach_ceil(Tensor[] tensors) -> Tensor[]
 - 测试文件：`tests/foreach_ceil/test_foreach_ceil.py`
 
 ---
-
 ### 2.18 fractional_max_pool2d
 
 #### 接口签名
@@ -883,7 +865,6 @@ torch.ops.ops_multimodal_fusion.fractional_max_pool2d(Tensor self, int[2] kernel
 - 测试文件：`tests/fractional_max_pool2d/test_fractional_max_pool2d.py`
 
 ---
-
 ### 2.19 fractional_max_pool3d
 
 #### 接口签名
@@ -933,7 +914,6 @@ torch.ops.ops_multimodal_fusion.fractional_max_pool3d(Tensor self, int[3] kernel
 - 测试文件：`tests/fractional_max_pool3d/test_fractional_max_pool3d.py`
 
 ---
-
 ### 2.20 index_reduce
 
 #### 接口签名
@@ -985,7 +965,6 @@ torch.ops.ops_multimodal_fusion.index_reduce(Tensor self, int dim, Tensor index,
 - 测试文件：`tests/index_reduce/test_index_reduce.py`
 
 ---
-
 ### 2.21 int_repr
 
 #### 接口签名
@@ -1032,7 +1011,6 @@ torch.ops.ops_multimodal_fusion.int_repr(Tensor x) -> Tensor
 - 测试文件：`tests/int_repr/test_int_repr.py`
 
 ---
-
 ### 2.22 kthvalue
 
 #### 接口签名
@@ -1082,7 +1060,6 @@ torch.ops.ops_multimodal_fusion.kthvalue(Tensor x, int k, int dim, bool keepdim)
 - 测试文件：`tests/kthvalue/test_kthvalue.py`
 
 ---
-
 ### 2.23 log_normal
 
 #### 接口签名
@@ -1131,7 +1108,6 @@ torch.ops.ops_multimodal_fusion.log_normal(Tensor x, float mean=1.0, float std=2
 - 测试文件：`tests/log_normal/test_log_normal.py`
 
 ---
-
 ### 2.24 logndtr
 
 #### 接口签名
@@ -1176,7 +1152,6 @@ torch.ops.ops_multimodal_fusion.logndtr(Tensor x) -> Tensor
 - 测试文件：`tests/logndtr/test_logndtr.py`
 
 ---
-
 ### 2.25 make_per_tensor_quantized
 
 #### 接口签名
@@ -1225,7 +1200,6 @@ torch.ops.ops_multimodal_fusion.make_per_tensor_quantized(Tensor x, float scale,
 - 测试文件：`tests/make_per_tensor_quantized/test_make_per_tensor_quantized.py`
 
 ---
-
 ### 2.26 max_unpool2d
 
 #### 接口签名
@@ -1276,7 +1250,6 @@ torch.ops.ops_multimodal_fusion.max_unpool2d(Tensor input, Tensor indices, int[2
 - 测试文件：`tests/max_unpool2d/test_max_unpool2d.py`
 
 ---
-
 ### 2.27 max_unpool3d
 
 #### 接口签名
@@ -1327,72 +1300,6 @@ torch.ops.ops_multimodal_fusion.max_unpool3d(Tensor input, Tensor indices, int[3
 - 测试文件：`tests/max_unpool3d/test_max_unpool3d.py`
 
 ---
-
-## 3. 算子目录结构
-
-每个算子的典型目录结构如下：
-
-```
-applications/llm/${op_name}/           # 算子目录
-├── arch22/                            # Atlas A2/A3 实现
-│   ├── ${op_name}.asc                 # 算子实现文件
-│   └── CMakeLists.txt                 # 编译配置
-└── arch35/                            # 950 系列实现（可选）
-    ├── ${op_name}.asc
-    └── CMakeLists.txt
-
-tests/${op_name}/                      # 测试目录
-└── test_${op_name}.py                 # pytest 测试文件
-```
-
----
-
-## 4. 算子实现文件说明
-
-`.asc` 文件是算子的完整实现，包含 4 个必要部分：
-
-| 部分 | 宏 / 关键代码 | 作用 |
-|------|--------------|------|
-| **Schema 注册** | `TORCH_LIBRARY_FRAGMENT(ops_multimodal_fusion, m)` | 向 PyTorch 声明算子签名 |
-| **Meta 函数** | `TORCH_LIBRARY_IMPL(..., Meta, m)` | 推断输出 tensor 的 shape 和 dtype |
-| **Kernel 实现** | `__global__ __aicore__ void ${op_name}_kernel(...)` | AscendC 设备端代码 |
-| **NPU Dispatch** | `TORCH_LIBRARY_IMPL(..., PrivateUse1, m)` | Host 端调度 |
-
----
-
-## 5. 调用流程
-
-### 5.1 安装
-
-```bash
-pip install ops_multimodal_fusion-1.0.0-cp38-abi3-*.whl --force-reinstall
-```
-
-### 5.2 导入
-
-```python
-import ops_multimodal_fusion  # 自动加载所有算子动态库
-```
-
-### 5.3 调用
-
-```python
-import torch
-import torch_npu
-
-x = torch.randn(shape).npu()
-result = torch.ops.ops_multimodal_fusion.<op_name>(x)
-```
-
----
-
-## 6. 更多帮助
-
-- [快速入门](../QUICKSTART.md)
-- [环境部署](install/quick_install.md)
-- [算子开发指南](develop/operator_development_guide.md)
-- [Ascend C API 参考](https://hiascend.com/document/redirect/CannCommunityAscendCApi)
-
 ### 2.28 mode
 
 #### 接口签名
@@ -1441,7 +1348,6 @@ torch.ops.ops_multimodal_fusion.mode(Tensor x, int dim, bool keepdim) -> (Tensor
 - 测试文件：`tests/mode/test_mode.py`
 
 ---
-
 ### 2.29 multi_margin_loss
 
 #### 接口签名
@@ -1492,7 +1398,6 @@ torch.ops.ops_multimodal_fusion.multi_margin_loss(Tensor input, Tensor target, S
 - 测试文件：`tests/multi_margin_loss/test_multi_margin_loss.py`
 
 ---
-
 ### 2.30 multilabel_margin_loss
 
 #### 接口签名
@@ -1540,8 +1445,73 @@ torch.ops.ops_multimodal_fusion.multilabel_margin_loss(Tensor input, Tensor targ
 - 测试文件：`tests/multilabel_margin_loss/test_multilabel_margin_loss.py`
 
 ---
+### 2.31 nested_binary_op
 
-### 2.31 polygamma
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.nested_binary_op(Tensor values, Tensor offsets, Tensor dense, int op_mode) -> Tensor
+```
+
+#### 功能
+
+对嵌套（不规则）张量与 dense 张量执行逐元素二元广播运算，语义对齐 PyTorch CUDA `op_dense_esuhm`。设批次数为 B，`offsets` 给出每个批次在 `values` 行方向的起止；对每个批次 i，将 `dense[i, 0, :]` 广播到该批次的所有行：`op_mode == 0` 为逐元素加，`op_mode == 1` 为逐元素乘。
+
+#### 参数说明
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `values` | Tensor | 嵌套张量的值，2-D `[sum_L, D]`，支持 FP32、FP16、INT32 |
+| `offsets` | Tensor | 批次行偏移，1-D `[B+1]`，int64，非递减，`offsets[0]=0`、`offsets[B]=sum_L` |
+| `dense` | Tensor | dense 张量，3-D `[B, 1, D]`，dtype 与 `values` 相同 |
+| `op_mode` | int | 运算模式：0 = 逐元素加，1 = 逐元素乘 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 输出张量，shape 与 `values` 相同 `[sum_L, D]`，dtype 与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 调用示例
+
+```python
+import torch
+import torch_npu
+import ops_multimodal_fusion
+
+# 2 个批次，行数分别为 2、3，特征维 D=4
+values = torch.randn(5, 4, dtype=torch.float32).npu()
+offsets = torch.tensor([0, 2, 5], dtype=torch.int64).npu()
+dense = torch.randn(2, 1, 4, dtype=torch.float32).npu()
+
+# op_mode=0：逐批次将 dense 广播加到该批次所有行
+result = torch.ops.ops_multimodal_fusion.nested_binary_op(values, offsets, dense, 0)
+print(result.shape)   # torch.Size([5, 4])
+```
+
+#### 源码位置
+
+- 算子实现：`applications/llm/nested_binary_op/arch35/nested_binary_op.asc`
+- 测试文件：`tests/nested_binary_op/test_nested_binary_op.py`
+
+---
+### 2.32 polygamma
 
 #### 接口签名
 
@@ -1586,8 +1556,7 @@ torch.ops.ops_multimodal_fusion.polygamma(Tensor x, int n) -> Tensor
 - 测试文件：`tests/polygamma/test_polygamma.py`
 
 ---
-
-### 2.32 searchsorted
+### 2.33 searchsorted
 
 #### 接口签名
 
@@ -1634,8 +1603,7 @@ torch.ops.ops_multimodal_fusion.searchsorted(Tensor sorted_sequence, Tensor valu
 - 测试文件：`tests/searchsorted/test_searchsorted.py`
 
 ---
-
-### 2.33 shifted_chebyshev_polynomial_t
+### 2.34 shifted_chebyshev_polynomial_t
 
 #### 接口签名
 
@@ -1680,8 +1648,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_t(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_t/test_shifted_chebyshev_polynomial_t.py`
 
 ---
-
-### 2.34 shifted_chebyshev_polynomial_u
+### 2.35 shifted_chebyshev_polynomial_u
 
 #### 接口签名
 
@@ -1726,8 +1693,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_u(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_u/test_shifted_chebyshev_polynomial_u.py`
 
 ---
-
-### 2.35 shifted_chebyshev_polynomial_v
+### 2.36 shifted_chebyshev_polynomial_v
 
 #### 接口签名
 
@@ -1772,8 +1738,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_v(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_v/test_shifted_chebyshev_polynomial_v.py`
 
 ---
-
-### 2.36 shifted_chebyshev_polynomial_w
+### 2.37 shifted_chebyshev_polynomial_w
 
 #### 接口签名
 
@@ -1818,8 +1783,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_w(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_w/test_shifted_chebyshev_polynomial_w.py`
 
 ---
-
-### 2.37 tril_indices
+### 2.38 tril_indices
 
 #### 接口签名
 
@@ -1867,8 +1831,7 @@ torch.ops.ops_multimodal_fusion.tril_indices(int row, int col, int offset, bool 
 - 测试文件：`tests/tril_indices/test_tril_indices.py`
 
 ---
-
-### 2.38 triu_indices
+### 2.39 triu_indices
 
 #### 接口签名
 
@@ -1916,8 +1879,7 @@ torch.ops.ops_multimodal_fusion.triu_indices(int row, int col, int offset, bool 
 - 测试文件：`tests/triu_indices/test_triu_indices.py`
 
 ---
-
-### 2.39 upsample_linear1d
+### 2.40 upsample_linear1d
 
 #### 接口签名
 
@@ -1982,8 +1944,7 @@ print(result.dtype)   # torch.float32
 - 测试文件：`tests/upsample_linear1d/test_upsample_linear1d.py`
 
 ---
-
-### 2.40 upsample_trilinear3d
+### 2.41 upsample_trilinear3d
 
 #### 接口签名
 
@@ -2033,72 +1994,6 @@ torch.ops.ops_multimodal_fusion.upsample_trilinear3d(Tensor input, int[3] output
 - 测试文件：`tests/upsample_trilinear3d/test_upsample_trilinear3d.py`
 
 ---
-
-## 3. 算子目录结构
-
-每个算子的典型目录结构如下：
-
-```
-applications/llm/${op_name}/           # 算子目录
-├── arch22/                            # Atlas A2/A3 实现
-│   ├── ${op_name}.asc                 # 算子实现文件
-│   └── CMakeLists.txt                 # 编译配置
-└── arch35/                            # 950 系列实现（可选）
-    ├── ${op_name}.asc
-    └── CMakeLists.txt
-
-tests/${op_name}/                      # 测试目录
-└── test_${op_name}.py                 # pytest 测试文件
-```
-
----
-
-## 4. 算子实现文件说明
-
-`.asc` 文件是算子的完整实现，包含 4 个必要部分：
-
-| 部分 | 宏 / 关键代码 | 作用 |
-|------|--------------|------|
-| **Schema 注册** | `TORCH_LIBRARY_FRAGMENT(ops_multimodal_fusion, m)` | 向 PyTorch 声明算子签名 |
-| **Meta 函数** | `TORCH_LIBRARY_IMPL(..., Meta, m)` | 推断输出 tensor 的 shape 和 dtype |
-| **Kernel 实现** | `__global__ __aicore__ void ${op_name}_kernel(...)` | AscendC 设备端代码 |
-| **NPU Dispatch** | `TORCH_LIBRARY_IMPL(..., PrivateUse1, m)` | Host 端调度 |
-
----
-
-## 5. 调用流程
-
-### 5.1 安装
-
-```bash
-pip install ops_multimodal_fusion-1.0.0-cp38-abi3-*.whl --force-reinstall
-```
-
-### 5.2 导入
-
-```python
-import ops_multimodal_fusion  # 自动加载所有算子动态库
-```
-
-### 5.3 调用
-
-```python
-import torch
-import torch_npu
-
-x = torch.randn(shape).npu()
-result = torch.ops.ops_multimodal_fusion.<op_name>(x)
-```
-
----
-
-## 6. 更多帮助
-
-- [快速入门](../QUICKSTART.md)
-- [环境部署](install/quick_install.md)
-- [算子开发指南](develop/operator_development_guide.md)
-- [Ascend C API 参考](https://hiascend.com/document/redirect/CannCommunityAscendCApi)
-
 ## 3. 算子目录结构
 
 每个算子的典型目录结构如下：

@@ -2,7 +2,6 @@
 
 | 算子名 | Torch API | ascend910b | ascend910_93 | ascend950 |
 | ------ | --------- | :--------: | :----------: | :-------: |
-| ------ | --------- | :--------: | :----------: | :-------: |
 | abs    | `torch.ops.ops_multimodal_fusion.abs(Tensor x) -> Tensor` | ✓ | ✓ | - |
 | adaptive_avg_pool2d | `torch.ops.ops_multimodal_fusion.adaptive_avg_pool2d(Tensor self, int[2] output_size) -> Tensor` | - | - | ✓ |
 | angle | `torch.ops.ops_multimodal_fusion.angle(Tensor input) -> Tensor` | - | - | ✓ |
@@ -33,6 +32,7 @@
 | mode | `torch.ops.ops_multimodal_fusion.mode(Tensor x, int dim, bool keepdim) -> (Tensor values, Tensor indices)` | - | - | ✓ |
 | multi_margin_loss | `torch.ops.ops_multimodal_fusion.multi_margin_loss(Tensor input, Tensor target, Scalar p=1, Scalar margin=1.0, Tensor? weight=None, int reduction=1) -> Tensor` | - | - | ✓ |
 | multilabel_margin_loss | `torch.ops.ops_multimodal_fusion.multilabel_margin_loss(Tensor input, Tensor target, int reduction=1) -> Tensor` | - | - | ✓ |
+| nested_binary_op | `torch.ops.ops_multimodal_fusion.nested_binary_op(Tensor values, Tensor offsets, Tensor dense, int op_mode) -> Tensor` | - | - | ✓ |
 | polygamma | `torch.ops.ops_multimodal_fusion.polygamma(Tensor x, int n) -> Tensor` | - | - | ✓ |
 | searchsorted | `torch.ops.ops_multimodal_fusion.searchsorted(Tensor sorted_sequence, Tensor values, bool out_int32=False, bool right=False) -> Tensor` | - | - | ✓ |
 | shifted_chebyshev_polynomial_t | `torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_t(Tensor x, Tensor n) -> Tensor` | - | - | ✓ |
@@ -43,5 +43,3 @@
 | triu_indices | `torch.ops.ops_multimodal_fusion.triu_indices(int row, int col, int offset, bool out_int32) -> Tensor` | - | - | ✓ |
 | upsample_linear1d | `torch.ops.ops_multimodal_fusion.upsample_linear1d(Tensor input, int output_size, bool align_corners=False, float scale=-1.) -> Tensor` | - | - | ✓ |
 | upsample_trilinear3d | `torch.ops.ops_multimodal_fusion.upsample_trilinear3d(Tensor input, int[3] output_size, bool align_corners=False, float scales_d=-1., float scales_h=-1., float scales_w=-1.) -> Tensor` | - | - | ✓ |
-
-> ✓ 表示已支持，- 表示暂未支持。详细的接口说明请参考[接口列表](api_list.md)。
