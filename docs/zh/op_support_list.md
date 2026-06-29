@@ -54,6 +54,7 @@
 | shifted_chebyshev_polynomial_u | `torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_u(Tensor x, Tensor n) -> Tensor` | - | - | ✓ |
 | shifted_chebyshev_polynomial_v | `torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_v(Tensor x, Tensor n) -> Tensor` | - | - | ✓ |
 | shifted_chebyshev_polynomial_w | `torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_w(Tensor x, Tensor n) -> Tensor` | - | - | ✓ |
+| sinc | `torch.ops.ops_multimodal_fusion.sinc(Tensor x) -> Tensor` | - | - | ✓ |
 | take | `torch.ops.ops_multimodal_fusion.take(Tensor self, Tensor index) -> Tensor` | - | - | ✓ |
 | tril_indices | `torch.ops.ops_multimodal_fusion.tril_indices(int row, int col, int offset, bool out_int32) -> Tensor` | - | - | ✓ |
 | triu_indices | `torch.ops.ops_multimodal_fusion.triu_indices(int row, int col, int offset, bool out_int32) -> Tensor` | - | - | ✓ |

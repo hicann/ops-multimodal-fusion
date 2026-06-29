@@ -2495,7 +2495,52 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_w(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_w/test_shifted_chebyshev_polynomial_w.py`
 
 ---
-### 2.53 take
+### 2.53 sinc
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.sinc(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算归一化 sinc 函数：`sinc(x) = sin(πx) / (πx)`，且 `sinc(0) = 1`，语义对齐 `torch.sinc`。
+
+#### 参数说明
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `x` | Tensor | 输入张量，支持 FP32、FP16 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 输出张量，shape 与 dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/sinc/arch35/sinc.asc`
+- 测试文件：`tests/sinc/test_sinc.py`
+
+---
+### 2.54 take
 
 #### 接口签名
 
@@ -2542,7 +2587,7 @@ torch.ops.ops_multimodal_fusion.take(Tensor self, Tensor index) -> Tensor
 - 测试文件：`tests/take/test_take.py`
 
 ---
-### 2.54 tril_indices
+### 2.55 tril_indices
 
 #### 接口签名
 
@@ -2590,7 +2635,7 @@ torch.ops.ops_multimodal_fusion.tril_indices(int row, int col, int offset, bool 
 - 测试文件：`tests/tril_indices/test_tril_indices.py`
 
 ---
-### 2.55 triu_indices
+### 2.56 triu_indices
 
 #### 接口签名
 
@@ -2638,7 +2683,7 @@ torch.ops.ops_multimodal_fusion.triu_indices(int row, int col, int offset, bool 
 - 测试文件：`tests/triu_indices/test_triu_indices.py`
 
 ---
-### 2.56 upsample_linear1d
+### 2.57 upsample_linear1d
 
 #### 接口签名
 
@@ -2703,7 +2748,7 @@ print(result.dtype)   # torch.float32
 - 测试文件：`tests/upsample_linear1d/test_upsample_linear1d.py`
 
 ---
-### 2.57 upsample_nearest1d
+### 2.58 upsample_nearest1d
 
 #### 接口签名
 
@@ -2750,7 +2795,7 @@ torch.ops.ops_multimodal_fusion.upsample_nearest1d(Tensor input, int output_size
 - 测试文件：`tests/upsample_nearest1d/test_upsample_nearest1d.py`
 
 ---
-### 2.58 upsample_trilinear3d
+### 2.59 upsample_trilinear3d
 
 #### 接口签名
 
@@ -2800,7 +2845,7 @@ torch.ops.ops_multimodal_fusion.upsample_trilinear3d(Tensor input, int[3] output
 - 测试文件：`tests/upsample_trilinear3d/test_upsample_trilinear3d.py`
 
 ---
-### 2.59 weight_norm
+### 2.60 weight_norm
 
 #### 接口签名
 
@@ -2847,7 +2892,7 @@ torch.ops.ops_multimodal_fusion.weight_norm(Tensor v, Tensor g, int dim) -> Tens
 - 测试文件：`tests/weight_norm/test_weight_norm.py`
 
 ---
-### 2.60 zeta
+### 2.61 zeta
 
 #### 接口签名
 
