@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -55,13 +55,14 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "poisson"):
 
 def test_poisson_interface_exist():
     """The 'ops_multimodal_fusion.poisson' operator is registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "poisson"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "poisson"),\
         "The 'poisson' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
 # ---------------------------------------------------------------------------
 # Helpers.
 # ---------------------------------------------------------------------------
+
 
 def _run_rate(shape, lam, seed, dtype):
     """Sample with a constant-rate lambda tensor; return output on CPU."""
@@ -89,9 +90,9 @@ def _assert_moments(shape, lam, seed, dtype):
         m_rel = 0.10
         v_rel = 0.25
 
-    assert abs(mean - lam) / lam < m_rel, \
+    assert abs(mean - lam) / lam < m_rel,\
         f"mean {mean:.5f} off lambda {lam} (rel tol {m_rel})"
-    assert abs(var - lam) / lam < v_rel, \
+    assert abs(var - lam) / lam < v_rel,\
         f"var {var:.5f} off lambda {lam} (rel tol {v_rel})"
 
 
@@ -105,7 +106,7 @@ def _assert_integral(shape, lam, seed, dtype):
     if dtype == torch.float32:
         assert is_int.all(), "fp32 poisson output must be integer-valued"
     else:
-        assert is_int.float().mean().item() >= 0.99, \
+        assert is_int.float().mean().item() >= 0.99,\
             "fp16 poisson output must be ~all integer-valued"
 
 
@@ -200,7 +201,7 @@ def test_poisson_zero_rate(dtype):
     """A lambda of zero makes every element exactly zero, matching PyTorch."""
     x = torch.zeros(4096, dtype=dtype).npu()
     out = torch.ops.ops_multimodal_fusion.poisson(x, 7).cpu().to(torch.float64)
-    assert torch.equal(out, torch.zeros_like(out)), \
+    assert torch.equal(out, torch.zeros_like(out)),\
         "lambda=0 must produce an all-zero tensor"
 
 

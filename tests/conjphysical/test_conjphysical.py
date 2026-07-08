@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "conjphysical"):
 def test_conjphysical_interface_exist():
     """The 'ops_multimodal_fusion.conjphysical' operator must be registered in torch.ops."""
     logging.info(torch.ops.ops_multimodal_fusion.conjphysical)
-    assert hasattr(torch.ops.ops_multimodal_fusion, "conjphysical"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "conjphysical"),\
         "The 'conjphysical' operator is not registered in the 'torch.ops.ops_multimodal_fusion' namespace."
 
 
@@ -94,9 +94,9 @@ def test_conjphysical_output_is_new_tensor():
     # Use storage identity rather than mutate-and-observe: torch_npu's
     # in-place ops on custom-op outputs can hit aclnnInplaceCopy (561103)
     # even on contiguous tensors, which is unrelated to aliasing.
-    assert y.data_ptr() != x.data_ptr(), \
+    assert y.data_ptr() != x.data_ptr(),\
         "conjphysical returned a view aliased to the input; expected a copy"
-    assert y.untyped_storage().data_ptr() != x.untyped_storage().data_ptr(), \
+    assert y.untyped_storage().data_ptr() != x.untyped_storage().data_ptr(),\
         "conjphysical output shares storage with the input"
 
 
@@ -136,10 +136,10 @@ def test_conjphysical_nan_is_nan(dtype):
     )
     y = torch.ops.ops_multimodal_fusion.conjphysical(xs.npu()).cpu()
     # NaN positions must remain NaN.
-    assert torch.isnan(y[0]).item() and torch.isnan(y[3]).item(), \
+    assert torch.isnan(y[0]).item() and torch.isnan(y[3]).item(),\
         f"NaN was not preserved (dtype={dtype}): got {y.tolist()}"
     # Non-NaN positions must equal input exactly (x * 1.0 is bit-exact here).
-    assert y[1].item() == 1.0 and y[2].item() == -1.0 and y[4].item() == 0.5, \
+    assert y[1].item() == 1.0 and y[2].item() == -1.0 and y[4].item() == 0.5,\
         f"non-NaN positions altered (dtype={dtype}): got {y.tolist()}"
 
 
@@ -176,6 +176,8 @@ def test_conjphysical_empty_tensor(dtype):
         "Re-enable once torch_npu ships strided D2D."
     )
 )
+
+
 @pytest.mark.parametrize("dtype", DTYPES)
 def test_conjphysical_non_contiguous_input(dtype):
     """Non-contiguous tensors are handled (kernel makes a contiguous copy)."""

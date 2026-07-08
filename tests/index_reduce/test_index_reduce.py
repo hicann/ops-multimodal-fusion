@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "index_reduce"):
 
 
 def test_index_reduce_interface_exist():
-    assert hasattr(torch.ops.ops_multimodal_fusion, "index_reduce"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "index_reduce"),\
         "The 'index_reduce' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
@@ -81,6 +81,7 @@ def _case_id(case):
 # Pair generation. Returns (self_cpu, index_cpu, source_cpu) with prescribed
 # edge characteristics. All three tensors are 1-D and contiguous.
 # ---------------------------------------------------------------------------
+
 
 def _gen_pair(case):
     k, m, mode, dtype, reduce = case.k, case.m, case.mode, case.dtype, case.reduce
@@ -262,6 +263,7 @@ def test_index_reduce_large(case):
 # ---------------------------------------------------------------------------
 # Negative-path tests: argument validation.
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_index_reduce_self_2d_rejected():

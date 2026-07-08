@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "frexp"):
 def test_frexp_interface_exist():
     """The 'ops_multimodal_fusion.frexp' operator must be registered in torch.ops."""
     logger.info("%s", torch.ops.ops_multimodal_fusion.frexp)
-    assert hasattr(torch.ops.ops_multimodal_fusion, "frexp"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "frexp"),\
         "The 'frexp' operator is not registered in the 'torch.ops.ops_multimodal_fusion' namespace."
 
 
@@ -79,9 +79,9 @@ def _check_frexp_invariant(x, mantissa, exponent):
 
     zero_mask = (x == 0)
     if zero_mask.any():
-        assert torch.equal(mantissa[zero_mask], torch.zeros_like(mantissa[zero_mask])), \
+        assert torch.equal(mantissa[zero_mask], torch.zeros_like(mantissa[zero_mask])),\
             "mantissa must be 0 where x == 0"
-        assert torch.equal(exponent[zero_mask], torch.zeros_like(exponent[zero_mask])), \
+        assert torch.equal(exponent[zero_mask], torch.zeros_like(exponent[zero_mask])),\
             "exponent must be 0 where x == 0"
 
     nonzero = ~zero_mask
@@ -271,6 +271,8 @@ def test_frexp_rejects_unsupported_dtype():
         "Re-enable once torch_npu ships strided D2D."
     )
 )
+
+
 @pytest.mark.parametrize("dtype", DTYPES)
 def test_frexp_non_contiguous_input(dtype):
     """Non-contiguous inputs should still produce a correct factorization."""

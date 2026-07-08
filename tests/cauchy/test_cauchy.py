@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ is impossible. Acceptance is distributional + structural:
   - sample median  ~= median          (Cauchy median = location param)
   - sample IQR / 2 ~= sigma           (Q1=median-sigma, Q3=median+sigma)
   - same seed + shape => identical output (deterministic kernel)
-  - different seed    => different output (independent stream)
+  - different seed => different output (independent stream)
   - shape/dtype preserved; finite (fp32 always; fp16 allows rare tail
     saturation to inf, consistent with PyTorch CUDA float-eps clipping)
   - median=+inf => all inf;  sigma<=0 => host reject
@@ -53,13 +53,14 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "cauchy"):
 
 def test_cauchy_interface_exist():
     """The 'ops_multimodal_fusion.cauchy' operator is registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "cauchy"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "cauchy"),\
         "The 'cauchy' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
 # ---------------------------------------------------------------------------
 # Helpers.
 # ---------------------------------------------------------------------------
+
 
 def _run_raw(shape, median, sigma, seed, dtype):
     """Return the sampled tensor on CPU in its native dtype."""
@@ -76,7 +77,7 @@ def _assert_distribution(shape, median, sigma, seed, dtype):
     samples = raw.to(torch.float64).flatten()
     finite = samples[torch.isfinite(samples)]
     n = samples.numel()
-    assert finite.numel() >= 0.98 * n, \
+    assert finite.numel() >= 0.98 * n,\
         f"too many non-finite samples: {n - finite.numel()}/{n}"
 
     med = finite.median().item()
@@ -91,9 +92,9 @@ def _assert_distribution(shape, median, sigma, seed, dtype):
         med_tol = 0.10 * sigma
         iqr_rel = 0.15
 
-    assert abs(med - median) < med_tol, \
+    assert abs(med - median) < med_tol,\
         f"median {med:.5f} off target {median} (tol {med_tol:.5f})"
-    assert abs(iqr_half - sigma) / sigma < iqr_rel, \
+    assert abs(iqr_half - sigma) / sigma < iqr_rel,\
         f"IQR/2 {iqr_half:.5f} off sigma {sigma} (rel tol {iqr_rel})"
 
 
@@ -182,6 +183,8 @@ CASES_LARGE = [
 @pytest.mark.parametrize(
     "case", [Case(*c) for c in CASES_SMALL],
     ids=[c[-1] for c in CASES_SMALL])
+
+
 def test_cauchy_small(case):
     _exec(case)
 
@@ -190,6 +193,8 @@ def test_cauchy_small(case):
 @pytest.mark.parametrize(
     "case", [Case(*c) for c in CASES_LARGE],
     ids=[c[-1] for c in CASES_LARGE])
+
+
 def test_cauchy_large(case):
     _exec(case)
 
@@ -199,7 +204,7 @@ def test_cauchy_large(case):
 def test_cauchy_median_inf(dtype):
     """median=+inf => every element is inf (matches PyTorch test_cauchy)."""
     raw = _run_raw((4096,), float("inf"), 0.5, 7, dtype)
-    assert torch.isinf(raw.to(torch.float64)).all(), \
+    assert torch.isinf(raw.to(torch.float64)).all(),\
         "median=inf must produce an all-inf tensor"
 
 

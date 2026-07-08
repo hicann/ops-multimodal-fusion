@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -161,6 +161,8 @@ def test_cdistbwd_p_zero_fp32():
         ((1, 1, 2, 128), (1, 1, 3, 128), 0.5),
     ],
 )
+
+
 def test_cdistbwd_shape_and_dtype_variants(dtype, shape1, shape2, p):
     x1 = _make_strided(shape1, torch.float32, offset=0.0)
     x2 = _make_strided(shape2, torch.float32, offset=0.2)
@@ -207,6 +209,8 @@ def test_cdistbwd_inf_ties_known_values():
         ((0, 2, 3), (0, 4, 3)),
     ],
 )
+
+
 def test_cdistbwd_empty_no_value_shortcuts(x1_shape, x2_shape):
     x1 = torch.empty(x1_shape, dtype=torch.float32)
     x2 = torch.empty(x2_shape, dtype=torch.float32)

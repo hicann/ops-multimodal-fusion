@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -150,6 +150,8 @@ def test_lstm_cell_interface_exist():
         (2, 5, 4, False),
     ],
 )
+
+
 def test_lstm_cell_matches_formula(dtype, batch, input_size, hidden_size, bias):
     seed = 100 + batch * 17 + input_size * 11 + hidden_size * 7 + int(bias)
     _case(CaseSpec(batch, input_size, hidden_size, dtype, seed, bias, -0.4, 0.4))

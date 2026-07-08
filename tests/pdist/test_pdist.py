@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -126,6 +126,8 @@ def test_pdist_upper_triangular_order_known_values():
         ((3, 1), float("inf")),
     ],
 )
+
+
 def test_pdist_shape_dtype_variants(dtype, shape, p):
     x = _make_strided(shape, dtype=torch.float32, offset=0.1)
     _run_case(x, p, dtype, f"shape-dtype dtype={dtype} shape={shape} p={p}")

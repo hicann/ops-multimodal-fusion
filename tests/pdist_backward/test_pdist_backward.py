@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -104,11 +104,13 @@ def _run_case(x_cpu, p, dtype, label):
 
 # ── Interface tests ──────────────────────────────────────────────────────
 
+
 def test_pdist_backward_interface_exists():
     assert hasattr(torch.ops.ops_multimodal_fusion, "pdist_backward")
 
 
 # ── P-value branch tests ─────────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("p", [0.0, 0.5, 1.0, 1.5, 2.0, 3.0, float("inf")])
@@ -136,6 +138,7 @@ def test_pdist_backward_default_p_is_two():
 
 # ── Shape & dtype variants ───────────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
 @pytest.mark.parametrize(
@@ -148,12 +151,15 @@ def test_pdist_backward_default_p_is_two():
         ((3, 1), float("inf")),
     ],
 )
+
+
 def test_pdist_backward_shape_dtype_variants(dtype, shape, p):
     x = _make_strided(shape, dtype=torch.float32, offset=0.1)
     _run_case(x, p, dtype, f"shape-dtype dtype={dtype} shape={shape} p={p}")
 
 
 # ── Zero-gradient / identical rows ───────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
@@ -171,6 +177,7 @@ def test_pdist_backward_identical_rows_zero_distance(dtype):
 
 
 # ── gradient for p of zero should be zero ────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_pdist_backward_p_zero_gradient_zero():
@@ -191,6 +198,7 @@ def test_pdist_backward_p_zero_gradient_zero():
 
 # ── sign-based gradient for p of one ─────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_pdist_backward_p_one_sign_pattern():
     """Verify p of one backward gives the sign of the per-pair difference."""
@@ -202,6 +210,7 @@ def test_pdist_backward_p_one_sign_pattern():
 
 
 # ── Euclidean gradient for p of two ──────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_pdist_backward_p_two_euclidean():
@@ -251,6 +260,7 @@ def test_pdist_backward_p_inf_known_values_low_precision_1d(dtype):
 
 # ── Multi-tile feature dimension ─────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_pdist_backward_multi_tile_feature_dim():
     x = torch.stack(
@@ -264,6 +274,7 @@ def test_pdist_backward_multi_tile_feature_dim():
 
 # ── Empty / edge shapes ──────────────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("shape", [(0, 3), (1, 3), (3, 0)])
 def test_pdist_backward_empty_and_edge_shapes(shape):
@@ -276,6 +287,7 @@ def test_pdist_backward_empty_and_edge_shapes(shape):
 
 
 # ── Non-contiguous input ─────────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_pdist_backward_non_contiguous_input():
@@ -298,6 +310,7 @@ def test_pdist_backward_non_contiguous_bfloat16_input():
 
 
 # ── Invalid argument tests ───────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_pdist_backward_invalid_args():
@@ -345,6 +358,7 @@ def test_pdist_backward_invalid_args():
 
 # ── A grad of zero produces zero output ──────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_pdist_backward_zero_grad_all_zeros():
     x = torch.randn(5, 7, dtype=torch.float32)
@@ -358,6 +372,7 @@ def test_pdist_backward_zero_grad_all_zeros():
 
 # ── Larger shape / stress test ───────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_pdist_backward_larger_shape():
     x = _make_strided((8, 32), dtype=torch.float32, offset=0.05)
@@ -365,6 +380,8 @@ def test_pdist_backward_larger_shape():
 
 
 # ── End-to-end: autograd through custom pdist ────────────────────────────
+
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_pdist_backward_e2e_consistency():
     """Verify pdist_backward produces the same result as autograd through pdist."""

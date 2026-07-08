@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "nested_binary_op"):
 
 
 def test_nested_binary_op_interface_exist():
-    assert hasattr(torch.ops.ops_multimodal_fusion, "nested_binary_op"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "nested_binary_op"),\
         "The 'nested_binary_op' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
@@ -90,6 +90,8 @@ Case = namedtuple("Case", "op_mode b d l_pattern dtype label")
 #   with_zero   alternating zero and k, at least one of each, where k is the
 #               larger of two and half the batch count plus one
 #   all_zero    every length is zero, so the row total is zero
+
+
 def _make_lengths(b, l_pattern, rng):
     if l_pattern.startswith("uniform_"):
         n = int(l_pattern.split("_", 1)[1])
@@ -106,6 +108,8 @@ def _make_lengths(b, l_pattern, rng):
 
 
 # Returns contiguous cpu tensors values, offsets and dense.
+
+
 def _gen_inputs(b, d, l_pattern, dtype, seed_key):
     rng = random.Random(abs(hash(seed_key)) % 10_000_000)
     torch.manual_seed(abs(hash(("torch", seed_key))) % 10_000_000)
@@ -268,6 +272,7 @@ def test_nested_binary_op_large(case):
 
 
 # Negative-path tests: argument validation.
+
 
 def _ok_inputs():
     """Build a valid values, offsets, dense and op_mode tuple on NPU."""

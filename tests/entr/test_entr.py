@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "entr"):
 def test_entr_interface_exist():
     """Test that the 'ops_multimodal_fusion.entr' operator is registered in torch.ops."""
     logging.info(torch.ops.ops_multimodal_fusion.entr)
-    assert hasattr(torch.ops.ops_multimodal_fusion, "entr"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "entr"),\
         "The 'entr' operator is not registered in the 'torch.ops.ops_multimodal_fusion' namespace."
 
 
@@ -81,7 +81,7 @@ def test_entr_positive(shape, dtype):
     result = torch.ops.ops_multimodal_fusion.entr(a.npu()).cpu()
 
     tol = _tolerances(dtype)
-    assert torch.allclose(result, expected, **tol), \
+    assert torch.allclose(result, expected, **tol),\
         f"Entr (positive) failed for shape {shape}, dtype {dtype}. " \
         f"Max diff: {torch.max(torch.abs(result - expected)):.6f}"
 
@@ -94,7 +94,7 @@ def test_entr_zero(dtype):
     expected = torch.special.entr(a)   # all zeros
     result = torch.ops.ops_multimodal_fusion.entr(a.npu()).cpu()
 
-    assert torch.equal(result, expected), \
+    assert torch.equal(result, expected),\
         f"Entr(0) expected all zeros but got {result}"
 
 
@@ -106,7 +106,7 @@ def test_entr_negative(dtype):
     expected = torch.special.entr(a)          # all -inf
     result = torch.ops.ops_multimodal_fusion.entr(a.npu()).cpu()
 
-    assert torch.all(torch.isneginf(result)), \
+    assert torch.all(torch.isneginf(result)),\
         f"Entr(negative) expected -inf everywhere, got {result}"
     # Ensure every element matches the reference (all -inf).
     assert torch.equal(result, expected)
@@ -134,12 +134,12 @@ def test_entr_mixed(shape, dtype):
     result = torch.ops.ops_multimodal_fusion.entr(a.npu()).cpu()
 
     # Check -inf positions agree.
-    assert torch.equal(torch.isneginf(result), torch.isneginf(expected)), \
+    assert torch.equal(torch.isneginf(result), torch.isneginf(expected)),\
         f"-inf positions diverge for shape {shape}, dtype {dtype}"
 
     # Compare finite positions within tolerance.
     finite_mask = torch.isfinite(expected)
     tol = _tolerances(dtype)
-    assert torch.allclose(result[finite_mask], expected[finite_mask], **tol), \
+    assert torch.allclose(result[finite_mask], expected[finite_mask], **tol),\
         f"Entr (mixed) finite-region mismatch for shape {shape}, dtype {dtype}. " \
         f"Max diff: {torch.max(torch.abs(result[finite_mask] - expected[finite_mask])):.6f}"

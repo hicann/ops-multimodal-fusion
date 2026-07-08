@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ DTYPES = [torch.float32, torch.float16]
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────
+
 
 def _reference(tensors):
     """Golden: elementwise ceil on each CPU tensor (public torch.ceil)."""
@@ -89,11 +90,13 @@ def _make_tensors(shapes, seed=42):
 
 # ── Interface tests ──────────────────────────────────────────────────────
 
+
 def test_foreach_ceil_interface_exists():
     assert hasattr(torch.ops.ops_multimodal_fusion, "foreach_ceil")
 
 
 # ── Basic functionality ──────────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
@@ -126,6 +129,7 @@ def test_foreach_ceil_list_len(dtype):
 
 # ── Known values ─────────────────────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
 def test_foreach_ceil_known_values(dtype):
@@ -143,6 +147,7 @@ def test_foreach_ceil_known_values(dtype):
 
 
 # ── Special values ───────────────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_foreach_ceil_special_values_fp32():
@@ -183,6 +188,7 @@ def test_foreach_ceil_neg_zero(dtype):
 
 # ── Large tensors (multi-tile / multi-block) ─────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
 def test_foreach_ceil_large_tensor(dtype):
@@ -192,6 +198,7 @@ def test_foreach_ceil_large_tensor(dtype):
 
 
 # ── Non-contiguous input ─────────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
@@ -204,6 +211,7 @@ def test_foreach_ceil_non_contiguous(dtype):
 
 
 # ── Empty tensor ─────────────────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
@@ -218,6 +226,7 @@ def test_foreach_ceil_empty_tensor(dtype):
 
 # ── Mixed dtypes in list ─────────────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_foreach_ceil_mixed_dtypes():
     tensors = [
@@ -231,6 +240,7 @@ def test_foreach_ceil_mixed_dtypes():
 
 
 # ── Invalid argument tests ───────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_foreach_ceil_invalid_args():
@@ -256,12 +266,15 @@ def test_foreach_ceil_invalid_args():
 
 # ── Multi-tensor list semantics ──────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("shape,dtype", [
     ((3,), torch.float32),
     ((2, 2), torch.float32),
     ((5,), torch.float16),
 ])
+
+
 def test_foreach_ceil_shape_preserved(shape, dtype):
     """Output shape/dtype matches input for varied shapes."""
     x = torch.randn(*shape, dtype=torch.float32).to(dtype).npu()
@@ -286,6 +299,7 @@ def test_foreach_ceil_output_not_alias():
 
 
 # ── Large boundary values ───────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_foreach_ceil_large_boundary():
@@ -350,6 +364,7 @@ def test_foreach_ceil_large_magnitude_with_inf_nan_fp32():
 
 
 # ── Long list (8 tensors, varied shapes) ─────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)

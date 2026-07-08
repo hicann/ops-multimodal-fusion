@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -42,13 +42,14 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "kthvalue"):
 
 def test_kthvalue_interface_exist():
     """The 'ops_multimodal_fusion.kthvalue' operator is registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "kthvalue"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "kthvalue"),\
         "The 'kthvalue' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
 # ---------------------------------------------------------------------------
 # Input generation that guarantees uniqueness along the reduction axis.
 # ---------------------------------------------------------------------------
+
 
 def _make_unique_along_dim(shape, dim, dtype, seed_key):
     """Return a tensor whose values along ``dim`` are pairwise distinct.
@@ -138,13 +139,13 @@ def _run(x_cpu, k, dim, keepdim, dtype):
     result_v = rv_npu.cpu()
     result_i = ri_npu.cpu()
 
-    assert result_v.dtype == dtype, \
+    assert result_v.dtype == dtype,\
         f"values dtype mismatch: got {result_v.dtype}, want {dtype}"
-    assert result_i.dtype == torch.int64, \
+    assert result_i.dtype == torch.int64,\
         f"indices dtype mismatch: got {result_i.dtype}, want torch.int64"
-    assert result_v.shape == expected_v.shape, \
+    assert result_v.shape == expected_v.shape,\
         f"values shape mismatch: got {tuple(result_v.shape)}, want {tuple(expected_v.shape)}"
-    assert result_i.shape == expected_i.shape, \
+    assert result_i.shape == expected_i.shape,\
         f"indices shape mismatch: got {tuple(result_i.shape)}, want {tuple(expected_i.shape)}"
 
     # values are an exact element copy → strict equality.
@@ -179,6 +180,7 @@ def test_kthvalue_large(shape, dim, k, dtype, keepdim):
 
 
 # Negative-path tests: argument validation.
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_kthvalue_invalid_k():

@@ -87,6 +87,7 @@ print(result.device)  # npu
 #### 源码位置
 
 - 算子实现：`applications/llm/abs/arch22/abs.asc`
+- 算子实现：`applications/llm/abs/arch35/abs.asc`
 - 测试文件：`tests/abs/test_abs.py`
 
 ---
@@ -136,7 +137,98 @@ torch.ops.ops_multimodal_fusion.adaptive_avg_pool2d(Tensor self, int[2] output_s
 - 测试文件：`tests/adaptive_avg_pool2d/test_adaptive_avg_pool2d.py`
 
 ---
-### 2.3 angle
+### 2.3 add
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.add(Tensor x, Tensor y) -> Tensor
+```
+
+#### 功能
+
+逐元素计算两个张量之和 x + y。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 第一个输入张量 |
+| `y` | 第二个输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素相加结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/add/arch35/add.asc`
+- 测试文件：`tests/add/test_add.py`
+
+---
+### 2.4 airy_ai
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.airy_ai(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算艾里函数 Ai(x)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 各元素的艾里函数值，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/airy_ai/arch35/airy_ai.asc`
+- 测试文件：`tests/airy_ai/test_airy_ai.py`
+
+---
+### 2.5 angle
 
 #### 接口签名
 
@@ -181,7 +273,106 @@ torch.ops.ops_multimodal_fusion.angle(Tensor input) -> Tensor
 - 测试文件：`tests/angle/test_angle.py`
 
 ---
-### 2.4 bessel_j0
+### 2.6 any
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.any(Tensor x, int dim, bool keepdim) -> Tensor
+```
+
+#### 功能
+
+沿指定维度做逻辑或归约，判断该维度上是否存在非零元素，输出布尔张量。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `dim` | 归约维度 |
+| `keepdim` | 是否保留被归约的维度 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 布尔张量（`torch.bool`），表示对应维度是否存在非零元素 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+| BOOL | `torch.bool` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/any/arch35/any.asc`
+- 测试文件：`tests/any/test_any.py`
+
+---
+### 2.7 avg_pool2d
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.avg_pool2d(Tensor self, int[2] kernel_size, int[2] stride=[], int[2] padding=0, bool ceil_mode=False, bool count_include_pad=True, int? divisor_override=None) -> Tensor
+```
+
+#### 功能
+
+对二维输入做平均池化，按滑动窗口对各区域取均值。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `self` | 输入张量 |
+| `kernel_size` | 池化窗口大小 (kH, kW) |
+| `stride` | 滑动步长，默认与 kernel_size 相同 |
+| `padding` | 输入两侧的零填充大小 |
+| `ceil_mode` | 计算输出尺寸时是否向上取整 |
+| `count_include_pad` | 求均值时是否计入填充元素 |
+| `divisor_override` | 指定时用作除数覆盖默认池化区域大小 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 平均池化后的输出张量，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/avg_pool2d/arch35/avg_pool2d.asc`
+- 测试文件：`tests/avg_pool2d/test_avg_pool2d.py`
+
+---
+### 2.8 bessel_j0
 
 #### 接口签名
 
@@ -225,7 +416,7 @@ torch.ops.ops_multimodal_fusion.bessel_j0(Tensor x) -> Tensor
 - 测试文件：`tests/bessel_j0/test_bessel_j0.py`
 
 ---
-### 2.5 bessel_j1
+### 2.9 bessel_j1
 
 #### 接口签名
 
@@ -269,7 +460,7 @@ torch.ops.ops_multimodal_fusion.bessel_j1(Tensor x) -> Tensor
 - 测试文件：`tests/bessel_j1/test_bessel_j1.py`
 
 ---
-### 2.6 bessel_y0
+### 2.10 bessel_y0
 
 #### 接口签名
 
@@ -313,7 +504,7 @@ torch.ops.ops_multimodal_fusion.bessel_y0(Tensor x) -> Tensor
 - 测试文件：`tests/bessel_y0/test_bessel_y0.py`
 
 ---
-### 2.7 bessel_y1
+### 2.11 bessel_y1
 
 #### 接口签名
 
@@ -357,7 +548,469 @@ torch.ops.ops_multimodal_fusion.bessel_y1(Tensor x) -> Tensor
 - 测试文件：`tests/bessel_y1/test_bessel_y1.py`
 
 ---
-### 2.8 cauchy
+### 2.12 binomial
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.binomial(Tensor count, Tensor prob, int seed=0) -> Tensor
+```
+
+#### 功能
+
+按二项分布 B(count, prob) 逐元素采样，count 为试验次数、prob 为单次成功概率。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `count` | 试验次数张量 |
+| `prob` | 单次成功概率张量 |
+| `seed` | 随机数种子 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 二项分布采样结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/binomial/arch35/binomial.asc`
+- 测试文件：`tests/binomial/test_binomial.py`
+
+---
+### 2.13 bitwisenot
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.bitwisenot(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素对整数张量做按位取反 ~x。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 整数输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 按位取反结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| INT32 | `torch.int32` | ✅ |
+| INT16 | `torch.int16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/bitwisenot/arch35/bitwisenot.asc`
+- 测试文件：`tests/bitwisenot/test_bitwisenot.py`
+
+---
+### 2.14 c2_accuracy
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.c2_accuracy(Tensor predictions, Tensor labels, int top_k=1) -> Tensor
+```
+
+#### 功能
+
+Caffe2 分类准确率算子，统计预测的 top_k 中命中真实标签的样本比例。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `predictions` | 各样本各类别的预测得分张量 |
+| `labels` | 真实标签张量 |
+| `top_k` | 取预测得分最高的前 k 个判定是否命中 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 标量准确率张量，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/c2_accuracy/arch35/c2_accuracy.asc`
+- 测试文件：`tests/c2_accuracy/test_c2_accuracy.py`
+
+---
+### 2.15 c2_affine_channel
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.c2_affine_channel(Tensor X, Tensor scale, Tensor bias) -> Tensor
+```
+
+#### 功能
+
+Caffe2 通道仿射变换，按通道对输入做 X * scale + bias。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `X` | 输入张量 |
+| `scale` | 各通道的缩放系数 |
+| `bias` | 各通道的偏置 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 通道仿射变换后的张量，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/c2_affine_channel/arch35/c2_affine_channel.asc`
+- 测试文件：`tests/c2_affine_channel/test_c2_affine_channel.py`
+
+---
+### 2.16 c2_batch_moments
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.c2_batch_moments(Tensor X) -> (Tensor mu, Tensor var)
+```
+
+#### 功能
+
+Caffe2 批量矩统计，沿批维度计算输入的均值 mu 与方差 var。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `X` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 元组 (mu, var)：批量均值与方差张量，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/c2_batch_moments/arch35/c2_batch_moments.asc`
+- 测试文件：`tests/c2_batch_moments/test_c2_batch_moments.py`
+
+---
+### 2.17 c2_batch_permutation
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.c2_batch_permutation(Tensor X, Tensor indices) -> Tensor
+```
+
+#### 功能
+
+Caffe2 批量重排，按 indices 给出的顺序沿批维度重新排列输入。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `X` | 输入张量 |
+| `indices` | 批维度的重排索引张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 按索引重排后的张量，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/c2_batch_permutation/arch35/c2_batch_permutation.asc`
+- 测试文件：`tests/c2_batch_permutation/test_c2_batch_permutation.py`
+
+---
+### 2.18 c2_boolean_mask
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.c2_boolean_mask(Tensor data, Tensor mask) -> (Tensor masked_data, Tensor masked_indices)
+```
+
+#### 功能
+
+Caffe2 布尔掩码选择，按 mask 为真的位置筛选 data，并返回被选元素及其原始索引。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `data` | 输入数据张量 |
+| `mask` | 布尔掩码张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 元组 (masked_data, masked_indices)：被选中的数据及其原始索引 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/c2_boolean_mask/arch35/c2_boolean_mask.asc`
+- 测试文件：`tests/c2_boolean_mask/test_c2_boolean_mask.py`
+
+---
+### 2.19 c2_boolean_unmask
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.c2_boolean_unmask(Tensor[] inputs) -> Tensor
+```
+
+#### 功能
+
+Caffe2 布尔反掩码，按交替给出的掩码与数据张量列表，将各数据散布回对应位置组装成完整输出。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `inputs` | 掩码与数据交替排列的张量列表 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 反掩码组装后的完整张量，dtype 同数据输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/c2_boolean_unmask/arch35/c2_boolean_unmask.asc`
+- 测试文件：`tests/c2_boolean_unmask/test_c2_boolean_unmask.py`
+
+---
+### 2.20 c2_bucketize
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.c2_bucketize(Tensor self, float[] boundaries) -> Tensor
+```
+
+#### 功能
+
+Caffe2 分桶算子，按给定的有序边界计算每个输入元素所落入的桶序号。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `self` | 输入张量 |
+| `boundaries` | 升序排列的分桶边界列表 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 各元素对应的桶序号张量 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/c2_bucketize/arch35/c2_bucketize.asc`
+- 测试文件：`tests/c2_bucketize/test_c2_bucketize.py`
+
+---
+### 2.21 c2_cbrt
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.c2_cbrt(Tensor self) -> Tensor
+```
+
+#### 功能
+
+Caffe2 立方根算子，逐元素计算输入的立方根 cbrt(x)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `self` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 各元素立方根结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/c2_cbrt/arch35/c2_cbrt.asc`
+- 测试文件：`tests/c2_cbrt/test_c2_cbrt.py`
+
+---
+### 2.22 cauchy
 
 #### 接口签名
 
@@ -405,7 +1058,7 @@ torch.ops.ops_multimodal_fusion.cauchy(Tensor x, float median=0.0, float sigma=1
 - 测试文件：`tests/cauchy/test_cauchy.py`
 
 ---
-### 2.9 cdist_backward
+### 2.23 cdist_backward
 
 #### 接口签名
 
@@ -454,7 +1107,187 @@ torch.ops.ops_multimodal_fusion.cdist_backward(Tensor grad, Tensor x1, Tensor x2
 - 测试文件：`tests/cdist_backward/test_cdist_backward.py`
 
 ---
-### 2.10 complex
+### 2.24 chebyshev_polynomial_t
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.chebyshev_polynomial_t(Tensor x, Tensor n) -> Tensor
+```
+
+#### 功能
+
+逐元素计算第一类切比雪夫多项式 T_n(x)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `n` | 多项式阶数张量（内部按整数处理） |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 各元素的 T_n(x) 值，FP32 输出 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/chebyshev_polynomial_t/arch35/chebyshev_polynomial_t.asc`
+- 测试文件：`tests/chebyshev_polynomial_t/test_chebyshev_polynomial_t.py`
+
+---
+### 2.25 chebyshev_polynomial_u
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.chebyshev_polynomial_u(Tensor x, Tensor n) -> Tensor
+```
+
+#### 功能
+
+逐元素计算第二类切比雪夫多项式 U_n(x)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `n` | 多项式阶数张量（内部按整数处理） |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 各元素的 U_n(x) 值，FP32 输出 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/chebyshev_polynomial_u/arch35/chebyshev_polynomial_u.asc`
+- 测试文件：`tests/chebyshev_polynomial_u/test_chebyshev_polynomial_u.py`
+
+---
+### 2.26 chebyshev_polynomial_v
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.chebyshev_polynomial_v(Tensor x, Tensor n) -> Tensor
+```
+
+#### 功能
+
+逐元素计算第三类切比雪夫多项式 V_n(x)，n 为多项式阶数。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `n` | 多项式阶数张量（与 x 可广播） |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素 V_n(x) 结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/chebyshev_polynomial_v/arch35/chebyshev_polynomial_v.asc`
+- 测试文件：`tests/chebyshev_polynomial_v/test_chebyshev_polynomial_v.py`
+
+---
+### 2.27 chebyshev_polynomial_w
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.chebyshev_polynomial_w(Tensor x, Tensor n) -> Tensor
+```
+
+#### 功能
+
+逐元素计算第四类切比雪夫多项式 W_n(x)，n 为多项式阶数。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `n` | 多项式阶数张量（与 x 可广播） |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素 W_n(x) 结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/chebyshev_polynomial_w/arch35/chebyshev_polynomial_w.asc`
+- 测试文件：`tests/chebyshev_polynomial_w/test_chebyshev_polynomial_w.py`
+
+---
+### 2.28 complex
 
 #### 接口签名
 
@@ -500,7 +1333,7 @@ torch.ops.ops_multimodal_fusion.complex(Tensor real, Tensor imag) -> Tensor
 - 测试文件：`tests/complex/test_complex.py`
 
 ---
-### 2.11 conjphysical
+### 2.29 conjphysical
 
 #### 接口签名
 
@@ -545,7 +1378,53 @@ torch.ops.ops_multimodal_fusion.conjphysical(Tensor x) -> Tensor
 - 测试文件：`tests/conjphysical/test_conjphysical.py`
 
 ---
-### 2.12 cummax
+### 2.30 copysign
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.copysign(Tensor a, Tensor b) -> Tensor
+```
+
+#### 功能
+
+逐元素将 b 的符号复制到 a 的数值上，返回幅值取自 a、符号取自 b 的结果（含符号零、NaN 按 IEEE-754 处理）。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 提供幅值的输入张量 |
+| `b` | 提供符号的输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 幅值同 a、符号同 b 的结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/copysign/arch35/copysign.asc`
+- 测试文件：`tests/copysign/test_copysign.py`
+
+---
+### 2.31 cummax
 
 #### 接口签名
 
@@ -591,7 +1470,7 @@ torch.ops.ops_multimodal_fusion.cummax(Tensor x, int dim) -> (Tensor values, Ten
 - 测试文件：`tests/cummax/test_cummax.py`
 
 ---
-### 2.13 cumprod
+### 2.32 cumprod
 
 #### 接口签名
 
@@ -637,7 +1516,7 @@ torch.ops.ops_multimodal_fusion.cumprod(Tensor x, int dim) -> Tensor
 - 测试文件：`tests/cumprod/test_cumprod.py`
 
 ---
-### 2.14 depthwise_conv3d
+### 2.33 depthwise_conv3d
 
 #### 接口签名
 
@@ -687,7 +1566,56 @@ torch.ops.ops_multimodal_fusion.depthwise_conv3d(Tensor input, Tensor weight, Te
 - 测试文件：`tests/depthwise_conv3d/test_depthwise_conv3d.py`
 
 ---
-### 2.15 digamma
+### 2.34 dequant_swiglu_quant
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.dequant_swiglu_quant(Tensor x, Tensor? weight_scale, Tensor? act_scale) -> (Tensor, Tensor)
+```
+
+#### 功能
+
+融合反量化、SwiGLU 激活与动态量化三步：先按 weight_scale/act_scale 反量化输入，再执行 SwiGLU（silu(右半) * 左半），最后做按行动态量化输出 int8 及对应缩放因子。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量（最后一维为偶数，前一半与后一半参与 SwiGLU） |
+| `weight_scale` | 可选权重反量化缩放因子（int32 输入时使用） |
+| `act_scale` | 可选激活反量化缩放因子（int32 输入时使用） |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | int8 量化输出（最后一维减半） |
+| Tensor | 按行的 float32 量化缩放因子 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| INT32 | `torch.int32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| BF16 | `torch.bfloat16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/dequant_swiglu_quant/arch35/dequant_swiglu_quant.asc`
+- 测试文件：`tests/dequant_swiglu_quant/test_dequant_swiglu_quant.py`
+
+---
+### 2.35 digamma
 
 #### 接口签名
 
@@ -731,7 +1659,100 @@ torch.ops.ops_multimodal_fusion.digamma(Tensor x) -> Tensor
 - 测试文件：`tests/digamma/test_digamma.py`
 
 ---
-### 2.16 entr
+### 2.36 dirichlet
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.dirichlet(Tensor alpha, int seed=0) -> Tensor
+```
+
+#### 功能
+
+按浓度参数 alpha 从狄利克雷分布采样，最后一维为单纯形轴：每行 K 个元素采样并归一化为概率单纯形上一点（非负且行和为 1）。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `alpha` | 浓度参数张量，最后一维为事件/单纯形轴 |
+| `seed` | 随机数种子，默认 0 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与 alpha 同形状同 dtype 的采样结果，每行落在概率单纯形上 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/dirichlet/arch35/dirichlet.asc`
+- 测试文件：`tests/dirichlet/test_dirichlet.py`
+
+---
+### 2.37 dynamic_quant
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.dynamic_quant(Tensor x, bool symmetric=True) -> (Tensor, Tensor)
+```
+
+#### 功能
+
+对输入按行做动态量化，输出 int8 量化张量及对应的按行 float32 缩放因子，支持对称与非对称两种模式。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `symmetric` | 是否对称量化，默认 True |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | int8 量化输出 |
+| Tensor | 按行的 float32 量化缩放因子 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP16 | `torch.float16` | ✅ |
+| BF16 | `torch.bfloat16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/dynamic_quant/arch35/dynamic_quant.asc`
+- 测试文件：`tests/dynamic_quant/test_dynamic_quant.py`
+
+---
+### 2.38 entr
 
 #### 接口签名
 
@@ -776,7 +1797,7 @@ torch.ops.ops_multimodal_fusion.entr(Tensor x) -> Tensor
 - 测试文件：`tests/entr/test_entr.py`
 
 ---
-### 2.17 erfcx
+### 2.39 erfcx
 
 #### 接口签名
 
@@ -820,7 +1841,52 @@ torch.ops.ops_multimodal_fusion.erfcx(Tensor x) -> Tensor
 - 测试文件：`tests/erfcx/test_erfcx.py`
 
 ---
-### 2.18 exp2
+### 2.40 exp
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.exp(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算自然指数 exp(x)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素 exp(x) 结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/exp/arch35/exp.asc`
+- 测试文件：`tests/exp/test_exp.py`
+
+---
+### 2.41 exp2
 
 #### 接口签名
 
@@ -865,7 +1931,7 @@ torch.ops.ops_multimodal_fusion.exp2(Tensor x) -> Tensor
 - 测试文件：`tests/exp2/test_exp2.py`
 
 ---
-### 2.19 exponential
+### 2.42 exponential
 
 #### 接口签名
 
@@ -912,7 +1978,7 @@ torch.ops.ops_multimodal_fusion.exponential(Tensor x, float lambd=1.0, int seed=
 - 测试文件：`tests/exponential/test_exponential.py`
 
 ---
-### 2.20 fft_conj_symmetry
+### 2.43 fft_conj_symmetry
 
 #### 接口签名
 
@@ -958,7 +2024,7 @@ torch.ops.ops_multimodal_fusion.fft_conj_symmetry(Tensor input, int dim, int out
 - 测试文件：`tests/fft_conj_symmetry/test_fft_conj_symmetry.py`
 
 ---
-### 2.21 foreach_ceil
+### 2.44 foreach_ceil
 
 #### 接口签名
 
@@ -1003,7 +2069,97 @@ torch.ops.ops_multimodal_fusion.foreach_ceil(Tensor[] tensors) -> Tensor[]
 - 测试文件：`tests/foreach_ceil/test_foreach_ceil.py`
 
 ---
-### 2.22 fractional_max_pool2d
+### 2.45 foreach_floor
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.foreach_floor(Tensor[] tensors) -> Tensor[]
+```
+
+#### 功能
+
+对张量列表中每个张量逐元素向下取整（floor），返回结果张量列表。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `tensors` | 输入张量列表 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐张量 floor 后的结果张量列表，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/foreach_floor/arch35/foreach_floor.asc`
+- 测试文件：`tests/foreach_floor/test_foreach_floor.py`
+
+---
+### 2.46 foreach_frac
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.foreach_frac(Tensor[] tensors) -> Tensor[]
+```
+
+#### 功能
+
+对张量列表中每个张量逐元素取小数部分（x - trunc(x)），返回结果张量列表。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `tensors` | 输入张量列表 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐张量取小数部分后的结果张量列表，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/foreach_frac/arch35/foreach_frac.asc`
+- 测试文件：`tests/foreach_frac/test_foreach_frac.py`
+
+---
+### 2.47 fractional_max_pool2d
 
 #### 接口签名
 
@@ -1052,7 +2208,7 @@ torch.ops.ops_multimodal_fusion.fractional_max_pool2d(Tensor self, int[2] kernel
 - 测试文件：`tests/fractional_max_pool2d/test_fractional_max_pool2d.py`
 
 ---
-### 2.23 fractional_max_pool3d
+### 2.48 fractional_max_pool3d
 
 #### 接口签名
 
@@ -1101,7 +2257,7 @@ torch.ops.ops_multimodal_fusion.fractional_max_pool3d(Tensor self, int[3] kernel
 - 测试文件：`tests/fractional_max_pool3d/test_fractional_max_pool3d.py`
 
 ---
-### 2.24 frexp
+### 2.49 frexp
 
 #### 接口签名
 
@@ -1146,7 +2302,97 @@ torch.ops.ops_multimodal_fusion.frexp(Tensor x) -> (Tensor mantissa, Tensor expo
 - 测试文件：`tests/frexp/test_frexp.py`
 
 ---
-### 2.25 geometric
+### 2.50 gamma
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.gamma(Tensor alpha, int seed=0) -> Tensor
+```
+
+#### 功能
+
+按浓度参数 alpha 从伽马分布逐元素采样（Marsaglia-Tsang 方法）。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `alpha` | 伽马分布浓度（形状）参数张量 |
+| `seed` | 随机数种子，默认 0 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与 alpha 同形状同 dtype 的伽马采样结果 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/gamma/arch35/gamma.asc`
+- 测试文件：`tests/gamma/test_gamma.py`
+
+---
+### 2.51 gelu
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.gelu(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算 GELU 激活函数。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素 GELU(x) 结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/gelu/arch35/gelu.asc`
+- 测试文件：`tests/gelu/test_gelu.py`
+
+---
+### 2.52 geometric
 
 #### 接口签名
 
@@ -1193,7 +2439,7 @@ torch.ops.ops_multimodal_fusion.geometric(Tensor x, float p, int seed=0) -> Tens
 - 测试文件：`tests/geometric/test_geometric.py`
 
 ---
-### 2.26 gru_cell
+### 2.53 gru_cell
 
 #### 接口签名
 
@@ -1243,7 +2489,233 @@ torch.ops.ops_multimodal_fusion.gru_cell(Tensor input, Tensor hx, Tensor weight_
 - 测试文件：`tests/gru_cell/test_gru_cell.py`
 
 ---
-### 2.27 index_copy
+### 2.54 hermite_polynomial_h
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.hermite_polynomial_h(Tensor x, Tensor n) -> Tensor
+```
+
+#### 功能
+
+逐元素计算物理学家厄米多项式 H_n(x)，n 为多项式阶数。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `n` | 多项式阶数张量（与 x 可广播） |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素 H_n(x) 结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/hermite_polynomial_h/arch35/hermite_polynomial_h.asc`
+- 测试文件：`tests/hermite_polynomial_h/test_hermite_polynomial_h.py`
+
+---
+### 2.55 hermite_polynomial_he
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.hermite_polynomial_he(Tensor x, Tensor n) -> Tensor
+```
+
+#### 功能
+
+逐元素计算概率学家厄米多项式 He_n(x)，n 为多项式阶数。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `n` | 多项式阶数张量（与 x 可广播） |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素 He_n(x) 结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/hermite_polynomial_he/arch35/hermite_polynomial_he.asc`
+- 测试文件：`tests/hermite_polynomial_he/test_hermite_polynomial_he.py`
+
+---
+### 2.56 hypot
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.hypot(Tensor x, Tensor y) -> Tensor
+```
+
+#### 功能
+
+逐元素计算直角三角形斜边 sqrt(x^2 + y^2)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 第一条直角边输入张量 |
+| `y` | 第二条直角边输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素 sqrt(x^2 + y^2) 结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/hypot/arch35/hypot.asc`
+- 测试文件：`tests/hypot/test_hypot.py`
+
+---
+### 2.57 igamma
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.igamma(Tensor a, Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算正则化下不完全伽马函数 P(a, x)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 形状参数张量 |
+| `x` | 自变量张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素 P(a, x) 结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/igamma/arch35/igamma.asc`
+- 测试文件：`tests/igamma/test_igamma.py`
+
+---
+### 2.58 igammac
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.igammac(Tensor a, Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算正则化上不完全伽马函数 Q(a, x) = 1 - P(a, x)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 形状参数张量 |
+| `x` | 自变量张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素 Q(a, x) 结果，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/igammac/arch35/igammac.asc`
+- 测试文件：`tests/igammac/test_igammac.py`
+
+---
+### 2.59 index_copy
 
 #### 接口签名
 
@@ -1292,7 +2764,7 @@ torch.ops.ops_multimodal_fusion.index_copy(Tensor self, int dim, Tensor index, T
 - 测试文件：`tests/index_copy/test_index_copy.py`
 
 ---
-### 2.28 index_reduce
+### 2.60 index_reduce
 
 #### 接口签名
 
@@ -1343,7 +2815,7 @@ torch.ops.ops_multimodal_fusion.index_reduce(Tensor self, int dim, Tensor index,
 - 测试文件：`tests/index_reduce/test_index_reduce.py`
 
 ---
-### 2.29 int_repr
+### 2.61 int_repr
 
 #### 接口签名
 
@@ -1389,7 +2861,54 @@ torch.ops.ops_multimodal_fusion.int_repr(Tensor x) -> Tensor
 - 测试文件：`tests/int_repr/test_int_repr.py`
 
 ---
-### 2.30 kthvalue
+### 2.62 kaiserwindow
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.kaiserwindow(Tensor x, float beta, int window_length, bool periodic) -> Tensor
+```
+
+#### 功能
+
+按形状参数 beta 计算凯泽窗（Kaiser window），支持周期与对称两种窗形。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 窗内位置索引输入张量 |
+| `beta` | 凯泽窗形状参数 |
+| `window_length` | 窗长 |
+| `periodic` | 是否为周期窗（True 周期，False 对称） |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 凯泽窗系数，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/kaiserwindow/arch35/kaiserwindow.asc`
+- 测试文件：`tests/kaiserwindow/test_kaiserwindow.py`
+
+---
+### 2.63 kthvalue
 
 #### 接口签名
 
@@ -1438,7 +2957,281 @@ torch.ops.ops_multimodal_fusion.kthvalue(Tensor x, int k, int dim, bool keepdim)
 - 测试文件：`tests/kthvalue/test_kthvalue.py`
 
 ---
-### 2.31 log_normal
+### 2.64 laguerre_polynomial_l
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.laguerre_polynomial_l(Tensor x, Tensor n) -> Tensor
+```
+
+#### 功能
+
+计算拉盖尔多项式 L_n(x)，n 为阶数（按元素广播）。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量，多项式自变量 |
+| `n` | 阶数张量，与 x 广播；按元素取整作为多项式阶 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素的拉盖尔多项式值，形状为 x 与 n 广播后的形状 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/laguerre_polynomial_l/arch35/laguerre_polynomial_l.asc`
+- 测试文件：`tests/laguerre_polynomial_l/test_laguerre_polynomial_l.py`
+
+---
+### 2.65 layer_norm
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.layer_norm(Tensor x, Tensor gamma, Tensor beta, float eps=1e-6) -> Tensor
+```
+
+#### 功能
+
+层归一化，对最后一维做归一化后施加可学习的缩放与偏移：gamma * (x - mean) / sqrt(var + eps) + beta。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量，2-D（行数, hidden_size） |
+| `gamma` | 1-D 缩放参数，长度等于 hidden_size |
+| `beta` | 1-D 偏移参数，长度等于 hidden_size |
+| `eps` | 数值稳定项，默认 1e-6 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与 x 形状、dtype 相同的归一化结果 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/layer_norm/arch35/layer_norm.asc`
+- 测试文件：`tests/layer_norm/test_layer_norm.py`
+
+---
+### 2.66 lcm
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.lcm(Tensor a, Tensor b) -> Tensor
+```
+
+#### 功能
+
+逐元素计算两个整数张量的最小公倍数。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 输入张量 a，与 b 形状、dtype 相同 |
+| `b` | 输入张量 b，与 a 形状、dtype 相同 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与输入形状、dtype 相同的逐元素最小公倍数 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/lcm/arch35/lcm.asc`
+- 测试文件：`tests/lcm/test_lcm.py`
+
+---
+### 2.67 leftshift
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.leftshift(Tensor a, int b) -> Tensor
+```
+
+#### 功能
+
+逐元素按位左移，z = a << b（b 为标量，采用二进制补码回绕语义）。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 输入张量 |
+| `b` | 左移位数，标量整数，取值范围 [0, 31] |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与 a 形状、dtype 相同的左移结果 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/leftshift/arch35/leftshift.asc`
+- 测试文件：`tests/leftshift/test_leftshift.py`
+
+---
+### 2.68 legendre_polynomial_p
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.legendre_polynomial_p(Tensor x, Tensor n) -> Tensor
+```
+
+#### 功能
+
+计算勒让德多项式 P_n(x)，n 为阶数（按元素广播）。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量，多项式自变量 |
+| `n` | 阶数张量，与 x 广播；按元素取整作为多项式阶 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素的勒让德多项式值，形状为 x 与 n 广播后的形状 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/legendre_polynomial_p/arch35/legendre_polynomial_p.asc`
+- 测试文件：`tests/legendre_polynomial_p/test_legendre_polynomial_p.py`
+
+---
+### 2.69 log_add_exp2
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.log_add_exp2(Tensor a, Tensor b) -> Tensor
+```
+
+#### 功能
+
+逐元素计算 log2(2^a + 2^b)，采用数值稳定算法（提取较大项）避免上溢/下溢。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 输入张量 a，与 b 形状、dtype 相同 |
+| `b` | 输入张量 b，与 a 形状、dtype 相同 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与输入形状、dtype 相同的逐元素结果 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/log_add_exp2/arch35/log_add_exp2.asc`
+- 测试文件：`tests/log_add_exp2/test_log_add_exp2.py`
+
+---
+### 2.70 log_normal
 
 #### 接口签名
 
@@ -1486,7 +3279,7 @@ torch.ops.ops_multimodal_fusion.log_normal(Tensor x, float mean=1.0, float std=2
 - 测试文件：`tests/log_normal/test_log_normal.py`
 
 ---
-### 2.32 logcumsumexp
+### 2.71 logcumsumexp
 
 #### 接口签名
 
@@ -1532,7 +3325,98 @@ torch.ops.ops_multimodal_fusion.logcumsumexp(Tensor x, int dim) -> Tensor
 - 测试文件：`tests/logcumsumexp/test_logcumsumexp.py`
 
 ---
-### 2.33 logndtr
+### 2.72 logicalxor
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.logicalxor(Tensor x, Tensor y) -> Tensor
+```
+
+#### 功能
+
+逐元素逻辑异或，输出为 bool 张量；输入须为 bool 类型。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入 bool 张量，与 y 形状、dtype 相同 |
+| `y` | 输入 bool 张量，与 x 形状、dtype 相同 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与输入形状相同的 bool 异或结果 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| BOOL | `torch.bool` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/logicalxor/arch35/logicalxor.asc`
+- 测试文件：`tests/logicalxor/test_logicalxor.py`
+
+---
+### 2.73 logit
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.logit(Tensor x, float? eps=None) -> Tensor
+```
+
+#### 功能
+
+logit（对数几率）函数，logit(x) = ln(x / (1 - x))；给定 eps 时先将 x 截断到 [eps, 1-eps]。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量，取值通常在 (0, 1) 区间 |
+| `eps` | 可选截断阈值，默认 None（不截断） |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与 x 形状、dtype 相同的 logit 结果 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/logit/arch35/logit.asc`
+- 测试文件：`tests/logit/test_logit.py`
+
+---
+### 2.74 logndtr
 
 #### 接口签名
 
@@ -1576,7 +3460,7 @@ torch.ops.ops_multimodal_fusion.logndtr(Tensor x) -> Tensor
 - 测试文件：`tests/logndtr/test_logndtr.py`
 
 ---
-### 2.34 lstm_cell
+### 2.75 lstm_cell
 
 #### 接口签名
 
@@ -1627,7 +3511,7 @@ torch.ops.ops_multimodal_fusion.lstm_cell(Tensor input, Tensor hx, Tensor cx, Te
 - 测试文件：`tests/lstm_cell/test_lstm_cell.py`
 
 ---
-### 2.35 make_per_tensor_quantized
+### 2.76 make_per_tensor_quantized
 
 #### 接口签名
 
@@ -1675,7 +3559,99 @@ torch.ops.ops_multimodal_fusion.make_per_tensor_quantized(Tensor x, float scale,
 - 测试文件：`tests/make_per_tensor_quantized/test_make_per_tensor_quantized.py`
 
 ---
-### 2.36 max_unpool2d
+### 2.77 matrix_exp_util
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.matrix_exp_util(Tensor input, Tensor coefficients) -> Tensor
+```
+
+#### 功能
+
+矩阵指数辅助算子，对输入沿首维做线性组合：output[k, ...] = sum_j coefficients[k, j] * input[j, ...]。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `input` | 输入张量 [T, *S]，首维为待组合的项 |
+| `coefficients` | 系数张量 [N, T]，与 input 同 dtype |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 形状为 [N, *S]、与 input 同 dtype 的线性组合结果 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP16 | `torch.float16` | ✅ |
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/matrix_exp_util/arch35/matrix_exp_util.asc`
+- 测试文件：`tests/matrix_exp_util/test_matrix_exp_util.py`
+
+---
+### 2.78 max
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.max_dim(Tensor x, int dim, bool keepdim) -> (Tensor values, Tensor indices)
+```
+
+#### 功能
+
+沿指定维度做最大值归约，返回最大值及其首次出现位置的索引。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `dim` | 归约维度，支持负数索引 |
+| `keepdim` | 是否保留被归约维度 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | values：沿 dim 的最大值；indices：对应的 argmax 索引（int64） |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/max/arch35/max.asc`
+- 测试文件：`tests/max/test_max.py`
+
+---
+### 2.79 max_unpool2d
 
 #### 接口签名
 
@@ -1725,7 +3701,7 @@ torch.ops.ops_multimodal_fusion.max_unpool2d(Tensor input, Tensor indices, int[2
 - 测试文件：`tests/max_unpool2d/test_max_unpool2d.py`
 
 ---
-### 2.37 max_unpool3d
+### 2.80 max_unpool3d
 
 #### 接口签名
 
@@ -1775,7 +3751,54 @@ torch.ops.ops_multimodal_fusion.max_unpool3d(Tensor input, Tensor indices, int[3
 - 测试文件：`tests/max_unpool3d/test_max_unpool3d.py`
 
 ---
-### 2.38 mode
+### 2.81 mean
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.mean(Tensor x, int dim, bool keepdim) -> Tensor
+```
+
+#### 功能
+
+沿指定维度求均值，mean = reduce_sum(x, dim) / dimSize。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `dim` | 归约维度，支持负数索引 |
+| `keepdim` | 是否保留被归约维度 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 沿 dim 求均值后的张量 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/mean/arch35/mean.asc`
+- 测试文件：`tests/mean/test_mean.py`
+
+---
+### 2.82 mode
 
 #### 接口签名
 
@@ -1823,7 +3846,142 @@ torch.ops.ops_multimodal_fusion.mode(Tensor x, int dim, bool keepdim) -> (Tensor
 - 测试文件：`tests/mode/test_mode.py`
 
 ---
-### 2.39 multi_margin_loss
+### 2.83 modified_bessel_k0
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.modified_bessel_k0(Tensor x) -> Tensor
+```
+
+#### 功能
+
+第二类零阶修正贝塞尔函数 K0(x)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与 x 形状、dtype 相同的 K0 结果 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/modified_bessel_k0/arch35/modified_bessel_k0.asc`
+- 测试文件：`tests/modified_bessel_k0/test_modified_bessel_k0.py`
+
+---
+### 2.84 modified_bessel_k1
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.modified_bessel_k1(Tensor x) -> Tensor
+```
+
+#### 功能
+
+第二类一阶修正贝塞尔函数 K1(x)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与 x 形状、dtype 相同的 K1 结果 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/modified_bessel_k1/arch35/modified_bessel_k1.asc`
+- 测试文件：`tests/modified_bessel_k1/test_modified_bessel_k1.py`
+
+---
+### 2.85 mul
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.mul(Tensor x, Tensor y) -> Tensor
+```
+
+#### 功能
+
+逐元素乘法，z = x * y。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 x，与 y 形状相同 |
+| `y` | 输入张量 y，与 x 形状相同 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 与输入形状、dtype 相同的逐元素乘积 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/mul/arch35/mul.asc`
+- 测试文件：`tests/mul/test_mul.py`
+
+---
+### 2.86 multi_margin_loss
 
 #### 接口签名
 
@@ -1873,7 +4031,7 @@ torch.ops.ops_multimodal_fusion.multi_margin_loss(Tensor input, Tensor target, S
 - 测试文件：`tests/multi_margin_loss/test_multi_margin_loss.py`
 
 ---
-### 2.40 multilabel_margin_loss
+### 2.87 multilabel_margin_loss
 
 #### 接口签名
 
@@ -1920,7 +4078,104 @@ torch.ops.ops_multimodal_fusion.multilabel_margin_loss(Tensor input, Tensor targ
 - 测试文件：`tests/multilabel_margin_loss/test_multilabel_margin_loss.py`
 
 ---
-### 2.41 nested_binary_op
+### 2.88 multinomial
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.multinomial(Tensor x, int num_samples, bool replacement=False, int seed=0) -> Tensor
+```
+
+#### 功能
+
+多项分布采样，按每行的非负权重作为概率分布抽取类别索引。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 每行非负权重，1-D (K,) 或 2-D (numDist, K)，最后一维为类别轴 |
+| `num_samples` | 每个分布抽取的样本数，须 > 0 |
+| `replacement` | 是否有放回采样，默认 False |
+| `seed` | 随机数种子，默认 0 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | int64 类别索引；1-D 输入返回 (num_samples,)，2-D 输入返回 (numDist, num_samples) |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/multinomial/arch35/multinomial.asc`
+- 测试文件：`tests/multinomial/test_multinomial.py`
+
+---
+### 2.89 nested_add_pad
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.nested_add_pad(Tensor values, Tensor offsets, int max_L, Scalar padding_value=0) -> Tensor
+```
+
+#### 功能
+
+嵌套张量加 padding：将压缩格式 (sum_L, D) 按 offsets 还原为零填充的稠密张量 (B, max_L, D)。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `values` | 2-D (sum_L, D) 压缩值，contiguous |
+| `offsets` | 1-D (B+1,) int64 偏移，非递减，offsets[0]=0、offsets[B]=sum_L |
+| `max_L` | 输出第二维长度，须 >= 各 batch 的最大有效长度 |
+| `padding_value` | 填充标量值，默认 0，转换为 values 的 dtype |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 3-D (B, max_L, D)、与 values 同 dtype 的零填充稠密张量 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/nested_add_pad/arch35/nested_add_pad.asc`
+- 测试文件：`tests/nested_add_pad/test_nested_add_pad.py`
+
+---
+### 2.90 nested_binary_op
 
 #### 接口签名
 
@@ -1986,7 +4241,193 @@ print(result.shape)   # torch.Size([5, 4])
 - 测试文件：`tests/nested_binary_op/test_nested_binary_op.py`
 
 ---
-### 2.42 pdist
+### 2.91 nested_bmm
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.nested_bmm(Tensor a_values, Tensor b_values, Tensor sizes) -> Tensor
+```
+
+#### 功能
+
+对嵌套张量执行批量矩阵乘（batched matrix multiply），按 sizes 描述的每个子矩阵分块计算 a 与 b 的乘积。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `a_values` | 左操作数的展平 values 张量 |
+| `b_values` | 右操作数的展平 values 张量 |
+| `sizes` | 描述各子矩阵形状的尺寸张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 各子矩阵乘积拼接而成的展平 values 张量 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/nested_bmm/arch35/nested_bmm.asc`
+- 测试文件：`tests/nested_bmm/test_nested_bmm.py`
+
+---
+### 2.92 nested_remove_pad
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.nested_remove_pad(Tensor padded, Tensor lengths) -> Tensor
+```
+
+#### 功能
+
+将带 padding 的批量张量按各样本的实际长度移除 padding，得到展平的嵌套张量 values。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `padded` | 含 padding 的输入张量 |
+| `lengths` | 各样本实际有效长度 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 移除 padding 后的展平张量 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/nested_remove_pad/arch35/nested_remove_pad.asc`
+- 测试文件：`tests/nested_remove_pad/test_nested_remove_pad.py`
+
+---
+### 2.93 nextafter
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.nextafter(Tensor a, Tensor b) -> Tensor
+```
+
+#### 功能
+
+逐元素返回从 a 朝 b 方向的下一个可表示浮点数。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `a` | 起始值张量 |
+| `b` | 目标方向张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素的下一个浮点数，shape 与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/nextafter/arch35/nextafter.asc`
+- 测试文件：`tests/nextafter/test_nextafter.py`
+
+---
+### 2.94 norm
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.norm(Tensor x, Scalar p, int dim, bool keepdim) -> Tensor
+```
+
+#### 功能
+
+沿指定维度计算 p 范数归约。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `p` | 范数阶数 |
+| `dim` | 归约维度 |
+| `keepdim` | 是否保留归约维度 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 沿 dim 归约后的范数张量 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/norm/arch35/norm.asc`
+- 测试文件：`tests/norm/test_norm.py`
+
+---
+### 2.95 pdist
 
 #### 接口签名
 
@@ -2033,7 +4474,7 @@ torch.ops.ops_multimodal_fusion.pdist(Tensor input, float p=2.0) -> Tensor
 - 测试文件：`tests/pdist/test_pdist.py`
 
 ---
-### 2.43 pdist_backward
+### 2.96 pdist_backward
 
 #### 接口签名
 
@@ -2082,7 +4523,7 @@ torch.ops.ops_multimodal_fusion.pdist_backward(Tensor grad, Tensor input, float 
 - 测试文件：`tests/pdist_backward/test_pdist_backward.py`
 
 ---
-### 2.44 poisson
+### 2.97 poisson
 
 #### 接口签名
 
@@ -2128,7 +4569,7 @@ torch.ops.ops_multimodal_fusion.poisson(Tensor x, int seed=0) -> Tensor
 - 测试文件：`tests/poisson/test_poisson.py`
 
 ---
-### 2.45 polar
+### 2.98 polar
 
 #### 接口签名
 
@@ -2174,7 +4615,7 @@ torch.ops.ops_multimodal_fusion.polar(Tensor abs, Tensor angle) -> Tensor
 - 测试文件：`tests/polar/test_polar.py`
 
 ---
-### 2.46 polygamma
+### 2.99 polygamma
 
 #### 接口签名
 
@@ -2219,7 +4660,7 @@ torch.ops.ops_multimodal_fusion.polygamma(Tensor x, int n) -> Tensor
 - 测试文件：`tests/polygamma/test_polygamma.py`
 
 ---
-### 2.47 put
+### 2.100 put
 
 #### 接口签名
 
@@ -2268,7 +4709,236 @@ torch.ops.ops_multimodal_fusion.put(Tensor self, Tensor index, Tensor source, bo
 - 测试文件：`tests/put/test_put.py`
 
 ---
-### 2.48 searchsorted
+### 2.101 quantized_relu
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.quantized_relu(Tensor x, int zero_point) -> Tensor
+```
+
+#### 功能
+
+对量化整型张量执行 ReLU，按 zero_point 截断（小于 zero_point 的值置为 zero_point）。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 量化整型输入张量 |
+| `zero_point` | 量化零点 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 量化 ReLU 结果，dtype 与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| INT8 | `torch.int8` | ✅ |
+| UINT8 | `torch.uint8` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/quantized_relu/arch35/quantized_relu.asc`
+- 测试文件：`tests/quantized_relu/test_quantized_relu.py`
+
+---
+### 2.102 rms_norm_gated
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.rms_norm_gated(Tensor hidden_states, Tensor gate, Tensor gamma, float epsilon=1e-6) -> Tensor
+```
+
+#### 功能
+
+带门控的 RMS 归一化：先对 hidden_states 做 RMS 归一化并乘以 gamma，再用 gate 进行门控。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `hidden_states` | 待归一化的输入张量 |
+| `gate` | 门控张量 |
+| `gamma` | 缩放权重 |
+| `epsilon` | 数值稳定项，默认 1e-6 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 门控 RMS 归一化结果 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| BF16 | `torch.bfloat16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/rms_norm_gated/arch35/rms_norm_gated.asc`
+- 测试文件：`tests/rms_norm_gated/test_rms_norm_gated.py`
+
+---
+### 2.103 rsqrt
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.rsqrt(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算平方根的倒数：`y = 1 / sqrt(x)`。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素平方根倒数，shape 与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/rsqrt/arch35/rsqrt.asc`
+- 测试文件：`tests/rsqrt/test_rsqrt.py`
+
+---
+### 2.104 scaled_modified_bessel_k0
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.scaled_modified_bessel_k0(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算缩放的第二类零阶修正贝塞尔函数：`y = exp(x) * K0(x)`。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素结果，shape 与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/scaled_modified_bessel_k0/arch35/scaled_modified_bessel_k0.asc`
+- 测试文件：`tests/scaled_modified_bessel_k0/test_scaled_modified_bessel_k0.py`
+
+---
+### 2.105 scaled_modified_bessel_k1
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.scaled_modified_bessel_k1(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算缩放的第二类一阶修正贝塞尔函数：`y = exp(x) * K1(x)`。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素结果，shape 与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/scaled_modified_bessel_k1/arch35/scaled_modified_bessel_k1.asc`
+- 测试文件：`tests/scaled_modified_bessel_k1/test_scaled_modified_bessel_k1.py`
+
+---
+### 2.106 searchsorted
 
 #### 接口签名
 
@@ -2315,7 +4985,7 @@ torch.ops.ops_multimodal_fusion.searchsorted(Tensor sorted_sequence, Tensor valu
 - 测试文件：`tests/searchsorted/test_searchsorted.py`
 
 ---
-### 2.49 shifted_chebyshev_polynomial_t
+### 2.107 shifted_chebyshev_polynomial_t
 
 #### 接口签名
 
@@ -2360,7 +5030,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_t(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_t/test_shifted_chebyshev_polynomial_t.py`
 
 ---
-### 2.50 shifted_chebyshev_polynomial_u
+### 2.108 shifted_chebyshev_polynomial_u
 
 #### 接口签名
 
@@ -2405,7 +5075,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_u(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_u/test_shifted_chebyshev_polynomial_u.py`
 
 ---
-### 2.51 shifted_chebyshev_polynomial_v
+### 2.109 shifted_chebyshev_polynomial_v
 
 #### 接口签名
 
@@ -2450,7 +5120,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_v(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_v/test_shifted_chebyshev_polynomial_v.py`
 
 ---
-### 2.52 shifted_chebyshev_polynomial_w
+### 2.110 shifted_chebyshev_polynomial_w
 
 #### 接口签名
 
@@ -2495,7 +5165,97 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_w(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_w/test_shifted_chebyshev_polynomial_w.py`
 
 ---
-### 2.53 sinc
+### 2.111 sigmoid
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.sigmoid(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素 Sigmoid 激活：`y = 1 / (1 + exp(-x))`。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | Sigmoid 结果，shape 与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/sigmoid/arch35/sigmoid.asc`
+- 测试文件：`tests/sigmoid/test_sigmoid.py`
+
+---
+### 2.112 sin
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.sin(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算正弦：`y = sin(x)`。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量（弧度） |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素正弦，shape 与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/sin/arch35/sin.asc`
+- 测试文件：`tests/sin/test_sin.py`
+
+---
+### 2.113 sinc
 
 #### 接口签名
 
@@ -2540,7 +5300,190 @@ torch.ops.ops_multimodal_fusion.sinc(Tensor x) -> Tensor
 - 测试文件：`tests/sinc/test_sinc.py`
 
 ---
-### 2.54 take
+### 2.114 spherical_bessel_j0
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.spherical_bessel_j0(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算零阶球贝塞尔函数：`y = sin(x) / x`（x=0 时为 1）。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素结果，shape 与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/spherical_bessel_j0/arch35/spherical_bessel_j0.asc`
+- 测试文件：`tests/spherical_bessel_j0/test_spherical_bessel_j0.py`
+
+---
+### 2.115 sqrt
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.sqrt(Tensor x) -> Tensor
+```
+
+#### 功能
+
+逐元素计算平方根：`y = sqrt(x)`。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐元素平方根，shape 与输入相同 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/sqrt/arch35/sqrt.asc`
+- 测试文件：`tests/sqrt/test_sqrt.py`
+
+---
+### 2.116 sum
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.sum(Tensor x, int dim, bool keepdim) -> Tensor
+```
+
+#### 功能
+
+沿指定维度求和归约。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量 |
+| `dim` | 归约维度 |
+| `keepdim` | 是否保留归约维度 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 沿 dim 求和后的张量 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| INT32 | `torch.int32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/sum/arch35/sum.asc`
+- 测试文件：`tests/sum/test_sum.py`
+
+---
+### 2.117 swi_glu
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.swi_glu(Tensor x) -> Tensor
+```
+
+#### 功能
+
+SwiGLU 激活：将输入沿最后一维对半切分为 a、b，计算 `y = silu(a) * b`。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `x` | 输入张量，最后一维为偶数 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | SwiGLU 结果，最后一维为输入的一半 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+| BF16 | `torch.bfloat16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/swi_glu/arch35/swi_glu.asc`
+- 测试文件：`tests/swi_glu/test_swi_glu.py`
+
+---
+### 2.118 take
 
 #### 接口签名
 
@@ -2587,7 +5530,7 @@ torch.ops.ops_multimodal_fusion.take(Tensor self, Tensor index) -> Tensor
 - 测试文件：`tests/take/test_take.py`
 
 ---
-### 2.55 tril_indices
+### 2.119 tril_indices
 
 #### 接口签名
 
@@ -2635,7 +5578,7 @@ torch.ops.ops_multimodal_fusion.tril_indices(int row, int col, int offset, bool 
 - 测试文件：`tests/tril_indices/test_tril_indices.py`
 
 ---
-### 2.56 triu_indices
+### 2.120 triu_indices
 
 #### 接口签名
 
@@ -2683,7 +5626,53 @@ torch.ops.ops_multimodal_fusion.triu_indices(int row, int col, int offset, bool 
 - 测试文件：`tests/triu_indices/test_triu_indices.py`
 
 ---
-### 2.57 upsample_linear1d
+### 2.121 unpack_pivots
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.unpack_pivots(Tensor pivots, int perm_size) -> Tensor
+```
+
+#### 功能
+
+将 LU 分解的 pivot 索引展开为完整的行置换序列。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `pivots` | LU 分解的 pivot 索引张量 |
+| `perm_size` | 置换序列长度 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 展开后的行置换索引（INT64） |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| INT32 | `torch.int32` | ✅ |
+| INT64 | `torch.int64` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/unpack_pivots/arch35/unpack_pivots.asc`
+- 测试文件：`tests/unpack_pivots/test_unpack_pivots.py`
+
+---
+### 2.122 upsample_linear1d
 
 #### 接口签名
 
@@ -2748,7 +5737,7 @@ print(result.dtype)   # torch.float32
 - 测试文件：`tests/upsample_linear1d/test_upsample_linear1d.py`
 
 ---
-### 2.58 upsample_nearest1d
+### 2.123 upsample_nearest1d
 
 #### 接口签名
 
@@ -2795,7 +5784,7 @@ torch.ops.ops_multimodal_fusion.upsample_nearest1d(Tensor input, int output_size
 - 测试文件：`tests/upsample_nearest1d/test_upsample_nearest1d.py`
 
 ---
-### 2.59 upsample_trilinear3d
+### 2.124 upsample_trilinear3d
 
 #### 接口签名
 
@@ -2845,7 +5834,7 @@ torch.ops.ops_multimodal_fusion.upsample_trilinear3d(Tensor input, int[3] output
 - 测试文件：`tests/upsample_trilinear3d/test_upsample_trilinear3d.py`
 
 ---
-### 2.60 weight_norm
+### 2.125 weight_norm
 
 #### 接口签名
 
@@ -2892,7 +5881,7 @@ torch.ops.ops_multimodal_fusion.weight_norm(Tensor v, Tensor g, int dim) -> Tens
 - 测试文件：`tests/weight_norm/test_weight_norm.py`
 
 ---
-### 2.61 zeta
+### 2.126 zeta
 
 #### 接口签名
 

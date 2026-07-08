@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "zeta"):
 
 def test_zeta_interface_exist():
     """The 'ops_multimodal_fusion.zeta' operator must be registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "zeta"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "zeta"),\
         "The 'zeta' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
@@ -157,6 +157,8 @@ def test_zeta_broadcast_inputs():
         ((1, 17), (3, 17)),
     ],
 )
+
+
 def test_zeta_broadcast_special_shapes(x_shape, q_shape):
     """Broadcast cases with non-aligned rows/columns and scalar expansion."""
     seed = abs(hash(("broadcast", x_shape, q_shape))) % 10_000_000

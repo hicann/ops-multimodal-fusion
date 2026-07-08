@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -58,13 +58,14 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "exponential"):
 
 def test_exponential_interface_exist():
     """The 'ops_multimodal_fusion.exponential' operator is registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "exponential"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "exponential"),\
         "The 'exponential' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
 # ---------------------------------------------------------------------------
 # Helpers.
 # ---------------------------------------------------------------------------
+
 
 def _run_raw(shape, lambd, seed, dtype):
     """Return the sampled tensor on CPU in its native dtype."""
@@ -81,7 +82,7 @@ def _assert_moments(shape, lambd, seed, dtype):
     samples = raw.to(torch.float64).flatten()
     finite = samples[torch.isfinite(samples)]
     n = samples.numel()
-    assert finite.numel() >= 0.98 * n, \
+    assert finite.numel() >= 0.98 * n,\
         f"too many non-finite samples: {n - finite.numel()}/{n}"
 
     mean = finite.mean().item()
@@ -98,11 +99,11 @@ def _assert_moments(shape, lambd, seed, dtype):
     else:  # fp16 loosens tolerances for quantization and RNG differences
         m_rel, s_rel, d_rel = 0.10, 0.12, 0.10
 
-    assert abs(mean - inv_l) / inv_l < m_rel, \
+    assert abs(mean - inv_l) / inv_l < m_rel,\
         f"mean {mean:.5f} off 1/lambd {inv_l:.5f} (rel tol {m_rel})"
-    assert abs(std - inv_l) / inv_l < s_rel, \
+    assert abs(std - inv_l) / inv_l < s_rel,\
         f"std {std:.5f} off 1/lambd {inv_l:.5f} (rel tol {s_rel})"
-    assert abs(med - med_t) / med_t < d_rel, \
+    assert abs(med - med_t) / med_t < d_rel,\
         f"median {med:.5f} off ln2/lambd {med_t:.5f} (rel tol {d_rel})"
 
 
@@ -120,7 +121,7 @@ def _assert_positive(shape, lambd, seed, dtype):
 def _assert_shape_finite(shape, lambd, seed, dtype):
     """Shape and dtype preserved and all values finite, with the maximum bounded near eighty-seven over lambd."""
     raw = _run_raw(shape, lambd, seed, dtype)
-    assert torch.isfinite(raw.to(torch.float64)).all(), \
+    assert torch.isfinite(raw.to(torch.float64)).all(),\
         "exponential output must be finite"
 
 
@@ -218,7 +219,7 @@ def test_exponential_lambd_inf(dtype):
     """An infinite lambd makes every element zero, matching the PyTorch test."""
     raw = _run_raw((4096,), float("inf"), 7, dtype)
     assert torch.equal(raw.to(torch.float64),
-                       torch.zeros_like(raw, dtype=torch.float64)), \
+                       torch.zeros_like(raw, dtype=torch.float64)),\
         "lambd=inf must produce an all-zero tensor"
 
 

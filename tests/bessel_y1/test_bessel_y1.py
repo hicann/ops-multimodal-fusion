@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -133,6 +133,8 @@ def test_bessel_y1_empty():
     "shape",
     [(1,), (7,), (17,), (128,), (2, 17), (4, 33), (3, 5, 7), (2, 3, 4, 5)],
 )
+
+
 def test_bessel_y1_regular_positive_random(shape):
     x = torch.rand(*shape, dtype=torch.float32) * 32.0 + 1e-4
     expected = reference(x)

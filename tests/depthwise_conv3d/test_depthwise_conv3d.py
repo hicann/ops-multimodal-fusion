@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -229,6 +229,8 @@ def test_depthwise_conv3d_invalid_bias_shape():
         ((1, 1, 1), (0, 0, 0), (1, 1)),
     ],
 )
+
+
 def test_depthwise_conv3d_invalid_attributes(stride, padding, dilation):
     x = torch.randn(1, 2, 4, 4, 4)
     weight = torch.randn(2, 1, 2, 2, 2)
@@ -260,6 +262,8 @@ def test_depthwise_conv3d_invalid_dtype():
         (torch.float32, torch.float32, torch.float16),
     ],
 )
+
+
 def test_depthwise_conv3d_dtype_mismatch(x_dtype, weight_dtype, bias_dtype):
     x = torch.randn(1, 1, 4, 4, 4, dtype=x_dtype)
     weight = torch.randn(1, 1, 2, 2, 2, dtype=weight_dtype)

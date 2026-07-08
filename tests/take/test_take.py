@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "take"):
 
 
 def test_take_interface_exist():
-    assert hasattr(torch.ops.ops_multimodal_fusion, "take"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "take"),\
         "The 'take' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
@@ -70,6 +70,7 @@ def test_take_interface_exist():
 # Pair generation. Returns the self tensor and the index tensor; self has the
 # requested shape, index is 1-D int64 and contiguous.
 # ---------------------------------------------------------------------------
+
 
 def _gen_signed_index(num_idx, num_self):
     """Half the values are negative below zero and half are non-negative below num_self, then shuffled."""
@@ -215,6 +216,7 @@ def test_take_large(self_shape, num_idx, mode, dtype, label):
 # ---------------------------------------------------------------------------
 # Negative-path tests: argument validation.
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_take_index_2d_rejected():

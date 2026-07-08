@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -92,6 +92,8 @@ def test_multilabel_margin_loss_1d(dtype, reduction, reduction_name):
         (17, [[0, 8, 16], [1, 2], [], [3, 4, 5, 6], [7]]),
     ],
 )
+
+
 def test_multilabel_margin_loss_2d_shapes(dtype, reduction, reduction_name, classes, rows):
     x = _make_input((len(rows), classes), dtype, seed=classes * 113 + len(rows))
     target = _target(rows, classes)

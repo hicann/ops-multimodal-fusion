@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -52,13 +52,14 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "bessel_y0"):
 
 def test_bessel_y0_interface_exist():
     """The 'ops_multimodal_fusion.bessel_y0' operator is registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "bessel_y0"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "bessel_y0"),\
         "The 'bessel_y0' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
 # ---------------------------------------------------------------------------
 # Helpers.
 # ---------------------------------------------------------------------------
+
 
 def _golden(x):
     """fp64-promoted torch reference, cast back to fp32 (transcendental rule)."""
@@ -71,11 +72,11 @@ def assert_close(actual, expected, *, rtol=5e-4, atol=5e-4):
     fin = torch.isfinite(a) & torch.isfinite(e)
     if fin.any():
         mx = (a[fin] - e[fin]).abs().max().item()
-        assert torch.allclose(a[fin], e[fin], rtol=rtol, atol=atol), \
+        assert torch.allclose(a[fin], e[fin], rtol=rtol, atol=atol),\
             f"max abs diff {mx:.3e} exceeds tol (rtol={rtol}, atol={atol})"
     assert torch.equal(torch.isnan(a), torch.isnan(e)), "NaN mask mismatch"
     # -inf positions (Y0 singularity at 0) must agree in sign+inf-ness
-    assert torch.equal(torch.isinf(a) & (a < 0), torch.isinf(e) & (e < 0)), \
+    assert torch.equal(torch.isinf(a) & (a < 0), torch.isinf(e) & (e < 0)),\
         "-inf mask mismatch"
 
 
@@ -142,6 +143,8 @@ CASES_LARGE = [
 @pytest.mark.parametrize(
     "case", [Case(*c) for c in CASES_SMALL],
     ids=[c[-1] for c in CASES_SMALL])
+
+
 def test_bessel_y0_small(case):
     if case.kind == "pts":
         _assert_points(case.shape_or_pts, case.seed)
@@ -153,6 +156,8 @@ def test_bessel_y0_small(case):
 @pytest.mark.parametrize(
     "case", [Case(*c) for c in CASES_LARGE],
     ids=[c[-1] for c in CASES_LARGE])
+
+
 def test_bessel_y0_large(case):
     _assert_range(case.shape_or_pts, case.lo, case.hi, case.seed)
 
@@ -182,12 +187,12 @@ def test_bessel_y0_special_values():
                       1e-7, 1e6, 2.0, -2.0], dtype=torch.float32)
     out = _run(x).to(torch.float64)
     assert torch.isinf(out[0]) and out[0].item() < 0, "Y0(0) must be -inf"
-    assert torch.isnan(out[1]) and torch.isnan(out[2]), \
+    assert torch.isnan(out[1]) and torch.isnan(out[2]),\
         "Y0(+/-inf) must be NaN (matches the torch reference)"
     assert torch.isnan(out[3]), "Y0(NaN) must be NaN"
     assert torch.isnan(out[7]), "Y0(-2) must be NaN (x<0 domain)"
     # finite positive samples match the golden
     g = torch.special.bessel_y0(x.to(torch.float64))
     for i in (4, 5, 6):
-        assert abs(out[i].item() - g[i].item()) < 5e-4 + 5e-4 * abs(g[i].item()), \
+        assert abs(out[i].item() - g[i].item()) < 5e-4 + 5e-4 * abs(g[i].item()),\
             f"Y0({x[i].item()}) {out[i].item()} vs golden {g[i].item()}"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -54,13 +54,14 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "log_normal"):
 
 def test_log_normal_interface_exist():
     """The 'ops_multimodal_fusion.log_normal' operator is registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "log_normal"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "log_normal"),\
         "The 'log_normal' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
 # ---------------------------------------------------------------------------
 # Helpers.
 # ---------------------------------------------------------------------------
+
 
 def _run_raw(shape, mean, std, seed, dtype):
     """Return the sampled tensor on CPU in its native dtype."""
@@ -77,7 +78,7 @@ def _pos_finite(shape, mean, std, seed, dtype):
     v = raw.to(torch.float64).flatten()
     keep = torch.isfinite(v) & (v > 0.0)
     n = v.numel()
-    assert keep.sum().item() >= 0.98 * n, \
+    assert keep.sum().item() >= 0.98 * n,\
         f"too many non-finite/non-positive samples: {n - int(keep.sum())}/{n}"
     return v[keep], n
 
@@ -101,11 +102,11 @@ def _assert_logmoments(shape, mean, std, seed, dtype):
         s_rel = 0.15
         d_rel = 0.15
 
-    assert abs(lmean - mean) < m_tol, \
+    assert abs(lmean - mean) < m_tol,\
         f"mean(lnX) {lmean:.5f} off mean {mean} (abs tol {m_tol:.5f})"
-    assert abs(lstd - std) / std < s_rel, \
+    assert abs(lstd - std) / std < s_rel,\
         f"std(lnX) {lstd:.5f} off std {std} (rel tol {s_rel})"
-    assert abs(med - med_t) / med_t < d_rel, \
+    assert abs(med - med_t) / med_t < d_rel,\
         f"median(X) {med:.5f} off exp(mean) {med_t:.5f} (rel tol {d_rel})"
 
 
@@ -117,7 +118,7 @@ def _assert_positive(shape, mean, std, seed, dtype):
     if dtype == torch.float32:
         assert good.all(), "fp32 log-normal output must be finite and > 0"
     else:
-        assert good.float().mean().item() >= 0.98, \
+        assert good.float().mean().item() >= 0.98,\
             "fp16 log-normal output must be mostly finite and > 0"
 
 
@@ -210,6 +211,8 @@ CASES_LARGE = [
 @pytest.mark.parametrize(
     "case", [Case(*c) for c in CASES_SMALL],
     ids=[c[-1] for c in CASES_SMALL])
+
+
 def test_log_normal_small(case):
     _exec(case)
 
@@ -218,6 +221,8 @@ def test_log_normal_small(case):
 @pytest.mark.parametrize(
     "case", [Case(*c) for c in CASES_LARGE],
     ids=[c[-1] for c in CASES_LARGE])
+
+
 def test_log_normal_large(case):
     _exec(case)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -51,13 +51,14 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "bessel_j1"):
 
 def test_bessel_j1_interface_exist():
     """The 'ops_multimodal_fusion.bessel_j1' operator is registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "bessel_j1"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "bessel_j1"),\
         "The 'bessel_j1' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
 # ---------------------------------------------------------------------------
 # Helpers.
 # ---------------------------------------------------------------------------
+
 
 def _golden(x):
     """fp64-promoted torch reference, cast back to fp32 (transcendental rule)."""
@@ -70,7 +71,7 @@ def assert_close(actual, expected, *, rtol=5e-4, atol=5e-4):
     fin = torch.isfinite(a) & torch.isfinite(e)
     if fin.any():
         mx = (a[fin] - e[fin]).abs().max().item()
-        assert torch.allclose(a[fin], e[fin], rtol=rtol, atol=atol), \
+        assert torch.allclose(a[fin], e[fin], rtol=rtol, atol=atol),\
             f"max abs diff {mx:.3e} exceeds tol (rtol={rtol}, atol={atol})"
     assert torch.equal(torch.isnan(a), torch.isnan(e)), "NaN mask mismatch"
 
@@ -138,6 +139,8 @@ CASES_LARGE = [
 @pytest.mark.parametrize(
     "case", [Case(*c) for c in CASES_SMALL],
     ids=[c[-1] for c in CASES_SMALL])
+
+
 def test_bessel_j1_small(case):
     if case.kind == "pts":
         _assert_points(case.shape_or_pts, case.seed)
@@ -149,6 +152,8 @@ def test_bessel_j1_small(case):
 @pytest.mark.parametrize(
     "case", [Case(*c) for c in CASES_LARGE],
     ids=[c[-1] for c in CASES_LARGE])
+
+
 def test_bessel_j1_large(case):
     _assert_range(case.shape_or_pts, case.lo, case.hi, case.seed)
 
@@ -166,7 +171,7 @@ def test_bessel_j1_odd_symmetry():
     x = torch.rand(777, generator=g, dtype=torch.float32) * 40.0 + 1e-4
     pos = _run(x).to(torch.float64)
     neg = _run(-x).to(torch.float64)
-    assert torch.allclose(neg, -pos, rtol=0, atol=0), \
+    assert torch.allclose(neg, -pos, rtol=0, atol=0),\
         "J1 must be odd: J1(-x) == -J1(x)"
 
 
@@ -180,7 +185,7 @@ def test_bessel_j1_special_values():
                       1e-7, -1e-7, 1e6, -1e6], dtype=torch.float32)
     out = _run(x).to(torch.float64)
     assert out[0].item() == 0.0, f"J1(0) must be 0, got {out[0].item()}"
-    assert torch.isnan(out[1]) and torch.isnan(out[2]), \
+    assert torch.isnan(out[1]) and torch.isnan(out[2]),\
         "J1(+/-inf) must be NaN (matches the torch reference)"
     assert torch.isnan(out[3]), "J1(NaN) must be NaN"
     # J1 is odd and ~ x/2 near 0: J1(+1e-7) ~= -J1(-1e-7), both ~5e-8.

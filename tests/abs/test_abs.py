@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2025 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -9,15 +9,11 @@
 # INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
 # See LICENSE in the root of the software repository for the full text of the License.
 
-import logging
 
-import pytest
 import torch
-import torch_npu
-
-import ops_multimodal_fusion
-
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+import torch_npu  # noqa: F401
+import pytest
+import ops_multimodal_fusion  # noqa: F401
 
 if not hasattr(torch.ops.ops_multimodal_fusion, "abs"):
     pytest.skip(
@@ -28,8 +24,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "abs"):
 
 def test_abs_interface_exist():
     """Test that the 'ops_multimodal_fusion.abs' operator is registered in torch.ops."""
-    logging.info(torch.ops.ops_multimodal_fusion.abs)
-    assert hasattr(torch.ops.ops_multimodal_fusion, "abs"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "abs"),\
         "The 'abs' operator is not registered in the 'torch.ops.ops_multimodal_fusion' namespace."
 
 
@@ -86,8 +81,6 @@ def test_abs_operator(shape, dtype):
     result_npu = torch.ops.ops_multimodal_fusion.abs(a_npu)
     result = result_npu.cpu()
 
-    assert torch.allclose(result, expected, rtol=1e-4, atol=1e-4), \
+    assert torch.allclose(result, expected, rtol=1e-4, atol=1e-4),\
         f"Abs failed for shape {shape}, dtype {dtype}. " \
         f"Max diff: {torch.max(torch.abs(result - expected)):.6f}"
-
-    logging.info(f"Test passed: shape={shape}, dtype={dtype}")

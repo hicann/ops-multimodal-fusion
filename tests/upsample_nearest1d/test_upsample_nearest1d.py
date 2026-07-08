@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -89,6 +89,8 @@ def test_upsample_nearest1d_interface_exist():
         ((1, 1, 4), 1),
     ],
 )
+
+
 def test_upsample_nearest1d_matches_torch(dtype, shape, output_size):
     seed = 100 + shape[0] * 17 + shape[1] * 11 + shape[2] * 7 + output_size
     _case(shape, output_size, dtype, seed)
@@ -129,6 +131,8 @@ def test_upsample_nearest1d_multi_channel_known_values(dtype):
         ((2, 1, 7), 0.6),
     ],
 )
+
+
 def test_upsample_nearest1d_scale_factor_matches_torch(dtype, shape, scale):
     seed = 500 + shape[0] * 17 + shape[1] * 11 + shape[2] * 7 + int(scale * 10)
     _scale_case(shape, scale, dtype, seed)
@@ -159,6 +163,8 @@ def test_upsample_nearest1d_scale_factor_uses_torch_default_not_recompute(dtype)
         ([0.0, 1.0, 2.0], 2.3, [0.0, 0.0, 0.0, 1.0, 1.0, 2.0]),
     ],
 )
+
+
 def test_upsample_nearest1d_scale_factor_known_values(dtype, values, scale, expected_values):
     input_ = torch.tensor(values, dtype=dtype).reshape(1, 1, -1)
     output_size = int(input_.size(-1) * scale)
@@ -177,6 +183,8 @@ def test_upsample_nearest1d_scale_factor_known_values(dtype, values, scale, expe
         ((1, 3, 1), 3.0),
     ],
 )
+
+
 def test_upsample_nearest1d_scale_factor_boundaries(dtype, shape, scale):
     seed = 900 + shape[0] * 17 + shape[1] * 11 + shape[2] * 7 + int(scale * 10)
     _scale_case(shape, scale, dtype, seed)

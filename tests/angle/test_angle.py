@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "angle"):
 def test_angle_interface_exist():
     """The 'ops_multimodal_fusion.angle' operator must be registered in torch.ops."""
     logging.info(torch.ops.ops_multimodal_fusion.angle)
-    assert hasattr(torch.ops.ops_multimodal_fusion, "angle"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "angle"),\
         "The 'angle' operator is not registered in the 'torch.ops.ops_multimodal_fusion' namespace."
 
 
@@ -172,11 +172,11 @@ def test_angle_nan_propagates(dtype):
     """NaN input must produce NaN output."""
     xs = torch.tensor([float('nan'), 1.0, -1.0, float('nan')], dtype=dtype)
     y = torch.ops.ops_multimodal_fusion.angle(xs.npu()).cpu()
-    assert torch.isnan(y[0]).item() and torch.isnan(y[3]).item(), \
+    assert torch.isnan(y[0]).item() and torch.isnan(y[3]).item(),\
         f"NaN did not propagate (dtype={dtype}): got {y.tolist()}"
     assert y[1].item() == 0.0, f"expected 0 for x=1 (dtype={dtype}), got {y[1].item()}"
     pi_tol = _dtype_tol(dtype)["atol"]
-    assert abs(y[2].item() - math.pi) < pi_tol, \
+    assert abs(y[2].item() - math.pi) < pi_tol,\
         f"expected ~pi for x=-1 (dtype={dtype}), got {y[2].item()}"
 
 
@@ -200,6 +200,8 @@ def test_angle_empty_tensor(dtype):
         "Re-enable once torch_npu ships strided D2D."
     )
 )
+
+
 @pytest.mark.parametrize("dtype", DTYPES)
 def test_angle_non_contiguous_input(dtype):
     """Non-contiguous tensors are handled (kernel makes a contiguous copy)."""

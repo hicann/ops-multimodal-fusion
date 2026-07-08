@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -65,13 +65,14 @@ Case = namedtuple("Case", ["num_self", "num_idx", "mode", "dim", "dtype", "label
 
 
 def test_index_copy_interface_exist():
-    assert hasattr(torch.ops.ops_multimodal_fusion, "index_copy"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "index_copy"),\
         "The 'index_copy' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
 # ---------------------------------------------------------------------------
 # Pair generation. Returns the self, index and source tensors, all 1-D and contiguous.
 # ---------------------------------------------------------------------------
+
 
 def _gen_index(num_self, num_idx, mode):
     """Build the int64 index tensor for the mode, with values from zero up to but below the self size."""
@@ -223,6 +224,7 @@ def test_index_copy_large(case):
 # ---------------------------------------------------------------------------
 # Negative-path tests: argument validation.
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_index_copy_self_2d_rejected():

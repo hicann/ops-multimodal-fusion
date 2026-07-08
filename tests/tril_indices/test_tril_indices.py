@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "tril_indices"):
 
 
 def test_tril_indices_interface_exist():
-    assert hasattr(torch.ops.ops_multimodal_fusion, "tril_indices"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "tril_indices"),\
         "The 'tril_indices' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
@@ -126,6 +126,7 @@ def test_tril_indices_large(row, col, offset, out_int32, label):
 
 
 # Negative-path tests: argument validation.
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_tril_indices_negative_row_rejected():

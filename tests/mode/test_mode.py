@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "mode"):
 
 def test_mode_interface_exist():
     """The 'ops_multimodal_fusion.mode' operator is registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "mode"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "mode"),\
         "The 'mode' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
@@ -61,6 +61,7 @@ def test_mode_interface_exist():
 #
 # All generators are deterministic via seed_key so re-runs are reproducible.
 # ---------------------------------------------------------------------------
+
 
 def _seed(seed_key):
     # Hash the repr so seeding stays deterministic even when seed_key holds
@@ -243,6 +244,8 @@ CASES_SMALL = [
 
 # Large cases: every fast-shape combo not selected for SMALL plus all large-only
 # shape combos (72 total).
+
+
 def _build_cases_large():
     cases = []
     for shape_entry in SMALL_FAST_SHAPES:
@@ -292,11 +295,11 @@ def _run(x_cpu, dim, keepdim, dtype, label):
     result_v = rv_npu.cpu()
     result_i = ri_npu.cpu()
 
-    assert result_v.dtype == dtype, \
+    assert result_v.dtype == dtype,\
         f"[{label}] values dtype mismatch: got {result_v.dtype}, want {dtype}"
-    assert result_i.dtype == torch.int64, \
+    assert result_i.dtype == torch.int64,\
         f"[{label}] indices dtype mismatch: got {result_i.dtype}, want torch.int64"
-    assert result_v.shape == expected_v.shape, \
+    assert result_v.shape == expected_v.shape,\
         f"[{label}] values shape: got {tuple(result_v.shape)}, want {tuple(expected_v.shape)}"
 
     # values: strict equal (mode value is deterministic — tie-break = smallest).
@@ -345,6 +348,7 @@ def test_mode_large(case):
 # ---------------------------------------------------------------------------
 # Negative-path tests: argument and dtype validation.
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_mode_invalid_dim():

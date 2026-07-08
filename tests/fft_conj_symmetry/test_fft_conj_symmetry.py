@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -145,11 +145,13 @@ def _make_complex_input(shape, seed=42):
 
 # ── Interface tests ──────────────────────────────────────────────────────
 
+
 def test_fft_conj_symmetry_interface_exists():
     assert hasattr(torch.ops.ops_multimodal_fusion, "fft_conj_symmetry")
 
 
 # ── Basic functionality ──────────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
@@ -197,6 +199,7 @@ def test_fft_conj_symmetry_odd_out_size(dtype):
 
 
 # ── Hermitian property tests ─────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
@@ -248,6 +251,7 @@ def test_fft_conj_symmetry_dc_nyquist_real():
 
 # ── Multi-dim with large inner sizes ─────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
 def test_fft_conj_symmetry_large_inner(dtype):
@@ -280,6 +284,7 @@ def test_fft_conj_symmetry_large_outer(dtype):
 
 # ── Minimum sizes ────────────────────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
 def test_fft_conj_symmetry_min_out_size_2(dtype):
@@ -307,6 +312,7 @@ def test_fft_conj_symmetry_empty_outer(dtype):
 
 # ── Non-contiguous input ─────────────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_fft_conj_symmetry_non_contiguous_input():
     """Non-contiguous input should still produce correct result."""
@@ -330,6 +336,7 @@ def test_fft_conj_symmetry_non_contiguous_complex32_input():
 
 # ── Edge case: single-element inner dim ───────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
 def test_fft_conj_symmetry_single_inner(dtype):
@@ -340,6 +347,7 @@ def test_fft_conj_symmetry_single_inner(dtype):
 
 
 # ── Invalid argument tests ───────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_fft_conj_symmetry_invalid_args():
@@ -380,6 +388,7 @@ def test_fft_conj_symmetry_invalid_args():
 
 # ── Known value test ─────────────────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_fft_conj_symmetry_known_values():
     """Verify with known complex values."""
@@ -405,6 +414,7 @@ def test_fft_conj_symmetry_known_values():
 
 # ── Real-valued input ────────────────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
 def test_fft_conj_symmetry_real_valued(dtype):
@@ -419,6 +429,7 @@ def test_fft_conj_symmetry_real_valued(dtype):
 
 
 # ── Pure imaginary input ─────────────────────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
@@ -453,6 +464,7 @@ def test_fft_conj_symmetry_special_values(dtype):
 
 # ── Zero input ───────────────────────────────────────────────────────────
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", DTYPES)
 @pytest.mark.parametrize("shape,dim", [
@@ -460,6 +472,8 @@ def test_fft_conj_symmetry_special_values(dtype):
     ((3, 5), 0), ((3, 5), 1),
     ((2, 5, 3), 0), ((2, 5, 3), 1), ((2, 5, 3), 2),
 ])
+
+
 def test_fft_conj_symmetry_zero_input(dtype, shape, dim):
     """All-zero input should produce all-zero output."""
     out_size = shape[dim] * 2
@@ -475,6 +489,7 @@ def test_fft_conj_symmetry_zero_input(dtype, shape, dim):
 
 
 # ── complex32 known values (exact bit-pattern round-trip) ───────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_fft_conj_symmetry_known_values_complex32():
@@ -507,6 +522,7 @@ def test_fft_conj_symmetry_known_values_complex32():
 
 
 # ── Stress test: large multi-dimensional ─────────────────────────────────
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_fft_conj_symmetry_large_multi_dim():

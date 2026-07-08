@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "logndtr"):
 def test_logndtr_interface_exist():
     """Test that the 'ops_multimodal_fusion.logndtr' operator is registered in torch.ops."""
     logging.info(torch.ops.ops_multimodal_fusion.logndtr)
-    assert hasattr(torch.ops.ops_multimodal_fusion, "logndtr"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "logndtr"),\
         "The 'logndtr' operator is not registered in the 'torch.ops.ops_multimodal_fusion' namespace."
 
 
@@ -81,7 +81,7 @@ def test_logndtr_operator(kind, arg1, arg2):
     # approximation (A&S 7.1.26, max error ~1.5e-7 in erfc) and a truncated
     # asymptotic series. Log magnifies relative errors at extreme negatives,
     # so use absolute + relative tolerance.
-    assert torch.allclose(result, expected, rtol=1e-3, atol=1e-3), \
+    assert torch.allclose(result, expected, rtol=1e-3, atol=1e-3),\
         f"LogNdtr failed for {label}. " \
         f"Max abs diff: {torch.max(torch.abs(result - expected)):.6f}, " \
         f"Max rel diff: {torch.max(torch.abs((result - expected) / (expected.abs() + 1e-10))):.6f}"

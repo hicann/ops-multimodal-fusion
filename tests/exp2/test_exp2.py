@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "exp2"):
 def test_exp2_interface_exist():
     """The 'ops_multimodal_fusion.exp2' operator must be registered in torch.ops."""
     logger.info(torch.ops.ops_multimodal_fusion.exp2)
-    assert hasattr(torch.ops.ops_multimodal_fusion, "exp2"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "exp2"),\
         "The 'exp2' operator is not registered in the 'torch.ops.ops_multimodal_fusion' namespace."
 
 
@@ -141,7 +141,7 @@ def test_exp2_named_values(dtype):
     # ulp, so use a one-to-two ulp tolerance instead of an exact equality check.
     integer_idx = torch.tensor([v == int(v) for v in xs_list])
     if integer_idx.any():
-        int_tol = dict(rtol=2e-6, atol=0) if dtype == torch.float32 \
+        int_tol = dict(rtol=2e-6, atol=0) if dtype == torch.float32\
                   else dict(rtol=2e-3, atol=0)   # fp16 ulp ~ 1e-3 at the high end
         assert torch.allclose(y[integer_idx], expected_hi[integer_idx], **int_tol), (
             f"exp2 of integer x exceeded ~1-2 ulp tolerance (dtype={dtype}); "
@@ -202,6 +202,8 @@ def test_exp2_empty_tensor(dtype):
         "Re-enable once torch_npu ships strided D2D."
     )
 )
+
+
 @pytest.mark.parametrize("dtype", DTYPES)
 def test_exp2_non_contiguous_input(dtype):
     """Non-contiguous tensors are handled (kernel makes a contiguous copy)."""

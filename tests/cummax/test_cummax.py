@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -144,6 +144,8 @@ def test_cummax_nan_propagates(dtype):
         [float("-inf"), -2.0, -1.0, float("-inf")],
     ],
 )
+
+
 def test_cummax_inf_values(dtype, values):
     x = torch.tensor([values], dtype=dtype)
 

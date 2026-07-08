@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -166,6 +166,8 @@ def test_gru_cell_interface_exist():
         (2, 5, 4, False),
     ],
 )
+
+
 def test_gru_cell_matches_formula(dtype, batch, input_size, hidden_size, bias):
     seed = 100 + batch * 17 + input_size * 11 + hidden_size * 7 + int(bias)
     gru = _build_inputs(BuildSpec((batch, input_size), hidden_size, dtype, seed, (bias, bias)))
@@ -187,6 +189,8 @@ def test_gru_cell_unbatched_matches_formula(dtype, input_size, hidden_size, bias
     "bias_ih_present,bias_hh_present",
     [(True, True), (True, False), (False, True), (False, False)],
 )
+
+
 def test_gru_cell_unbatched_bias_combinations(dtype, bias_ih_present, bias_hh_present):
     seed = 760 + int(bias_ih_present) * 17 + int(bias_hh_present) * 31
     gru = _build_inputs(BuildSpec((4,), 3, dtype, seed, (bias_ih_present, bias_hh_present)))
@@ -259,6 +263,8 @@ def test_gru_cell_larger_hidden_offsets(dtype):
     "batch,input_size,hidden_size,seed",
     [(1, 1, 1, 351), (3, 2, 5, 361), (4, 5, 3, 371)],
 )
+
+
 def test_gru_cell_matches_torch_nn_module_float32_shapes(batch, input_size, hidden_size, seed):
     _assert_matches_module((batch, input_size), hidden_size, seed)
 

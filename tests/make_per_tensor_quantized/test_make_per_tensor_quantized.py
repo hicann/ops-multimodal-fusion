@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, OP):
 
 def test_make_per_tensor_quantized_interface_exist():
     """The 'ops_multimodal_fusion.make_per_tensor_quantized' operator is registered."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, OP), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, OP),\
         f"The '{OP}' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
@@ -137,9 +137,9 @@ def _run(x_cpu, scale, zero_point, label):
     expected = _expected(x_cpu)
     result = torch.ops.ops_multimodal_fusion.make_per_tensor_quantized(
         x_cpu.npu(), scale, zero_point).cpu()
-    assert result.dtype == x_cpu.dtype, \
+    assert result.dtype == x_cpu.dtype,\
         f"[{label}] dtype mismatch: got {result.dtype}, want {x_cpu.dtype}"
-    assert result.shape == expected.shape, \
+    assert result.shape == expected.shape,\
         f"[{label}] shape mismatch: got {tuple(result.shape)}, " \
         f"want {tuple(expected.shape)}"
     assert torch.equal(result, expected), (
@@ -266,6 +266,7 @@ def test_make_per_tensor_quantized_valid_param_sweep(
 # Negative-path tests: host TORCH_CHECK rejection.
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.int64])
 def test_make_per_tensor_quantized_unsupported_dtype(dtype):
@@ -291,6 +292,8 @@ def test_make_per_tensor_quantized_invalid_scale(scale):
     (torch.uint8, -1),
     (torch.uint8, 256),
 ])
+
+
 def test_make_per_tensor_quantized_invalid_zero_point(dtype, zero_point):
     """zero_point must lie within the input dtype's full value range."""
     x = torch.zeros((32,), dtype=dtype).npu()

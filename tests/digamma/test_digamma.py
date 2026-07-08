@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "digamma"):
 def test_digamma_interface_exist():
     """Test that the 'ops_multimodal_fusion.digamma' operator is registered in torch.ops."""
     logging.info(torch.ops.ops_multimodal_fusion.digamma)
-    assert hasattr(torch.ops.ops_multimodal_fusion, "digamma"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "digamma"),\
         "The 'digamma' operator is not registered in the 'torch.ops.ops_multimodal_fusion' namespace."
 
 
@@ -132,7 +132,7 @@ def test_digamma_wide_range():
     max_rel = ((y - expected) / expected.abs().clamp_min(1e-6)).abs().max().item()
     assert max_rel < 1e-4 and max_abs < 1e-2, (
         f"digamma wide-range mismatch: max abs={max_abs}, max rel={max_rel}\n"
-        f"got     = {y.tolist()}\n"
+        f"got = {y.tolist()}\n"
         f"expected= {expected.tolist()}"
     )
     logging.info(f"Wide-range test passed (max abs={max_abs:.3e}, max rel={max_rel:.3e}).")

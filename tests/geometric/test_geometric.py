@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -67,13 +67,14 @@ Case = namedtuple("Case", ["shape", "p", "seed", "dtype", "kind", "label"])
 
 def test_geometric_interface_exist():
     """The 'ops_multimodal_fusion.geometric' operator is registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "geometric"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "geometric"),\
         "The 'geometric' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
 # ---------------------------------------------------------------------------
 # Helpers.
 # ---------------------------------------------------------------------------
+
 
 def _run_raw(shape, p, seed, dtype):
     """Return the sampled tensor on CPU in its native dtype."""
@@ -90,7 +91,7 @@ def _assert_moments(shape, p, seed, dtype):
     samples = raw.to(torch.float64).flatten()
     finite = samples[torch.isfinite(samples)]
     n = samples.numel()
-    assert finite.numel() >= 0.98 * n, \
+    assert finite.numel() >= 0.98 * n,\
         f"too many non-finite samples: {n - finite.numel()}/{n}"
 
     mean = finite.mean().item()
@@ -107,11 +108,11 @@ def _assert_moments(shape, p, seed, dtype):
     else:  # fp16 loosens tolerances for quantization and RNG differences
         m_rel, s_rel, p1_tol = 0.10, 0.15, 0.05
 
-    assert abs(mean - inv_p) / inv_p < m_rel, \
+    assert abs(mean - inv_p) / inv_p < m_rel,\
         f"mean {mean:.5f} off 1/p {inv_p:.5f} (rel tol {m_rel})"
-    assert abs(std - std_t) / std_t < s_rel, \
+    assert abs(std - std_t) / std_t < s_rel,\
         f"std {std:.5f} off sqrt(1-p)/p {std_t:.5f} (rel tol {s_rel})"
-    assert abs(p1 - p) < p1_tol, \
+    assert abs(p1 - p) < p1_tol,\
         f"P(X=1) {p1:.5f} off p {p} (abs tol {p1_tol})"
 
 
@@ -127,7 +128,7 @@ def _assert_integral(shape, p, seed, dtype):
     else:
         # In half precision exact integers reach only into the low thousands,
         # so a rare large tail value may quantize off an exact integer.
-        assert is_int.float().mean().item() >= 0.99, \
+        assert is_int.float().mean().item() >= 0.99,\
             "fp16 geometric output must be ~all integer-valued"
 
 

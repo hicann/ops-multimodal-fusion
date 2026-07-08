@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ Case = namedtuple("Case", "self_shape num_idx mode dtype accumulate label")
 
 
 def test_put_interface_exist():
-    assert hasattr(torch.ops.ops_multimodal_fusion, "put"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "put"),\
         "The 'put' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
@@ -80,6 +80,7 @@ def test_put_interface_exist():
 # Pair generation. Returns the self tensor, the index tensor and the source tensor; self has the
 # requested shape, index/source are 1-D and contiguous.
 # ---------------------------------------------------------------------------
+
 
 def _randint_signed(count, num_self):
     """Half the values are negative below zero and half are non-negative below num_self, then shuffled."""
@@ -286,6 +287,7 @@ def test_put_large(case):
 # ---------------------------------------------------------------------------
 # Negative-path tests: argument validation.
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_put_source_2d_rejected():

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -153,6 +153,8 @@ def test_logcumsumexp_numeric_stability(dtype):
         ((1, 513), 1, "decreasing"),
     ],
 )
+
+
 def test_logcumsumexp_long_scan_precision(dtype, shape, dim, pattern):
     if pattern == "small":
         base = torch.linspace(-1.0e-3, 1.0e-3, steps=shape[dim], dtype=torch.float32)
@@ -212,6 +214,8 @@ def test_logcumsumexp_nan_propagates(dtype):
         [float("-inf"), float("-inf"), float("-inf"), -4.0, -3.0, -2.0],
     ],
 )
+
+
 def test_logcumsumexp_special_value_ordering(dtype, values):
     x = torch.tensor([values], dtype=dtype)
 
@@ -233,6 +237,8 @@ def test_logcumsumexp_special_value_ordering(dtype, values):
         [float("-inf"), 0.0, float("inf"), 1.0],
     ],
 )
+
+
 def test_logcumsumexp_inf_values(dtype, values):
     x = torch.tensor([values], dtype=dtype)
 

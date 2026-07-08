@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "searchsorted"):
 
 
 def test_searchsorted_interface_exist():
-    assert hasattr(torch.ops.ops_multimodal_fusion, "searchsorted"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "searchsorted"),\
         "The 'searchsorted' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
@@ -53,6 +53,7 @@ def test_searchsorted_interface_exist():
 # Pair generation: returns (sorted_sequence_cpu, values_cpu) with prescribed
 # edge characteristics. All sorted sequences are 1-D and contiguous.
 # ---------------------------------------------------------------------------
+
 
 def _gen_sorted_sequence(n, mode, dtype):
     if mode == "mid_dup":
@@ -100,7 +101,7 @@ def _gen_values(values_shape, mode, dtype, sorted_seq):
         lo = int(sorted_seq[0]) - 5
         hi = int(sorted_seq[-1]) + 5
         return torch.randint(lo, hi + 1, values_shape, dtype=torch.int32)
-    return torch.randn(*values_shape).to(dtype) if len(values_shape) > 0 \
+    return torch.randn(*values_shape).to(dtype) if len(values_shape) > 0\
         else torch.randn(()).to(dtype)
 
 
@@ -183,7 +184,7 @@ def _run_case(n, values_shape, mode, dtype, label):
         sorted_cpu.npu(), values_cpu.npu()
     )
     result = result_npu.cpu()
-    assert result.dtype == torch.int64, \
+    assert result.dtype == torch.int64,\
         f"indices dtype mismatch: got {result.dtype}, want int64"
     assert result.shape == expected.shape, (
         f"shape mismatch: got {tuple(result.shape)}, want {tuple(expected.shape)} "
@@ -210,6 +211,7 @@ def test_searchsorted_large(n, values_shape, mode, dtype, label):
 
 
 # Negative-path tests: argument validation.
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 def test_searchsorted_dtype_mismatch():

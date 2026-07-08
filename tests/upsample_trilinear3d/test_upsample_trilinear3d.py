@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -116,6 +116,8 @@ def test_upsample_trilinear3d_interface_exists():
         ((2, 1, 3, 1, 2), (4, 3, 5)),
     ],
 )
+
+
 def test_upsample_trilinear3d_size_matches_torch(dtype, align_corners, shape, output_size):
     seed = 100 + sum(shape) * 7 + sum(output_size) * 11 + int(align_corners)
     _size_case(shape, output_size, dtype, seed, align_corners)
@@ -132,6 +134,8 @@ def test_upsample_trilinear3d_size_matches_torch(dtype, align_corners, shape, ou
         ((1, 2, 5, 4, 3), (0.6, 0.75, 1.8)),
     ],
 )
+
+
 def test_upsample_trilinear3d_scale_factor_matches_torch(dtype, align_corners, shape, scales):
     seed = 500 + sum(shape) * 13 + int(sum(scales) * 100) + int(align_corners)
     _scale_case(shape, scales, dtype, seed, align_corners)
@@ -176,6 +180,8 @@ def test_upsample_trilinear3d_known_eight_neighbor_values(dtype):
         (True, [0.0, 0.25, 0.5, 0.75, 1.0]),
     ],
 )
+
+
 def test_upsample_trilinear3d_singleton_dims_known_width_values(
     dtype, align_corners, expected_values
 ):
@@ -249,6 +255,8 @@ def test_upsample_trilinear3d_rejects_invalid_output_size(output_size):
         (1, 1, 2, 2, 0),
     ],
 )
+
+
 def test_upsample_trilinear3d_rejects_empty_dimensions(shape):
     input_ = torch.empty(shape, dtype=torch.float32)
     with pytest.raises(RuntimeError):
@@ -265,6 +273,8 @@ def test_upsample_trilinear3d_rejects_empty_dimensions(shape):
         (float("inf"), 1.0, 1.0),
     ],
 )
+
+
 def test_upsample_trilinear3d_rejects_invalid_scale(scales):
     input_ = torch.randn(1, 1, 3, 4, 5, dtype=torch.float32)
     with pytest.raises(RuntimeError):

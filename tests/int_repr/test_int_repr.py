@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2026 Huawei Technologies Co., Ltd.
+# Copyright (c) 2025 Tianjin University Ltd
 # This program is free software, you can redistribute it and/or modify it under the terms and conditions of
 # CANN Open Software License Agreement Version 2.0 (the "License").
 # Please refer to the License for details. You may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ if not hasattr(torch.ops.ops_multimodal_fusion, "int_repr"):
 
 def test_int_repr_interface_exist():
     """The 'ops_multimodal_fusion.int_repr' operator is registered in torch.ops."""
-    assert hasattr(torch.ops.ops_multimodal_fusion, "int_repr"), \
+    assert hasattr(torch.ops.ops_multimodal_fusion, "int_repr"),\
         "The 'int_repr' operator is not registered in 'torch.ops.ops_multimodal_fusion'."
 
 
@@ -125,9 +125,9 @@ def _expected(x_cpu):
 def _run(x_cpu, label):
     expected = _expected(x_cpu)
     result = torch.ops.ops_multimodal_fusion.int_repr(x_cpu.npu()).cpu()
-    assert result.dtype == x_cpu.dtype, \
+    assert result.dtype == x_cpu.dtype,\
         f"[{label}] dtype mismatch: got {result.dtype}, want {x_cpu.dtype}"
-    assert result.shape == expected.shape, \
+    assert result.shape == expected.shape,\
         f"[{label}] shape mismatch: got {tuple(result.shape)}, want {tuple(expected.shape)}"
     assert torch.equal(result, expected), (
         f"[{label}] value mismatch (dtype={x_cpu.dtype}, "
@@ -226,6 +226,7 @@ def test_int_repr_large(shape, dtype, gen_name, label):
 # ---------------------------------------------------------------------------
 # Negative-path tests: unsupported dtype rejected by host TORCH_CHECK.
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.skipif(not torch.npu.is_available(), reason="NPU device not found")
 @pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.int64])
