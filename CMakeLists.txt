@@ -23,6 +23,7 @@ include(cmake/func.cmake)
 
 set(NPU_ARCH "dav-3510" CACHE STRING "NPU architecture for compiler flag (e.g. dav-3510, dav-2201)")
 set(ARCH_DIR "arch35" CACHE STRING "Architecture directory name (e.g. arch35, arch22)")
+set(OP_LIST "" CACHE STRING "Comma-separated list of ops to build (empty = all)")
 # torch.ops.<EXTENSION_MODULE_NAME> namespace exposed to Python
 set(EXTENSION_MODULE_NAME "ops_multimodal_fusion" CACHE STRING "Extension module name")
 set(PYTHON_PACKAGE_DIR "ops_multimodal_fusion" CACHE STRING "Python package directory name")
@@ -60,6 +61,10 @@ set(COMPILE_OPTIONS
     -DEXTENSION_MODULE_NAME=${EXTENSION_MODULE_NAME}
 )
 
-# Each op in applications/<category>/<op>/<arch>/ builds its own libops_multimodal_fusion_<op>.so
-# directly into ${PYTHON_PACKAGE_DIR} via add_sources() in cmake/func.cmake.
+# Each op in applications/<category>/<op>/<arch>/ contributes sources via add_sources(),
+# all compiled into a single libops_multimodal_fusion.so in build/lib/.
+if(NOT "${OP_LIST}" STREQUAL "")
+    string(REPLACE "," ";" OP_LIST ${OP_LIST})
+endif()
 add_subdirectory(applications)
+add_op_library()

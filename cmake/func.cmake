@@ -9,18 +9,30 @@
 # define functions
 
 # usage: recursive_add_subdirectory()
+# If OP_LIST is set (comma-separated), only include those ops; otherwise include all.
 macro(recursive_add_subdirectory)
     file(GLOB CURRENT_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*)
     foreach(SUB_DIR ${CURRENT_DIRS})
         if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${SUB_DIR}/${ARCH_DIR}/CMakeLists.txt")
-            add_subdirectory(${SUB_DIR}/${ARCH_DIR})
+            set(_INCLUDE_OP 1)
+            if(NOT "${OP_LIST}" STREQUAL "")
+                set(_INCLUDE_OP 0)
+                foreach(_OP ${OP_LIST})
+                    if("${_OP}" STREQUAL "${SUB_DIR}")
+                        set(_INCLUDE_OP 1)
+                        break()
+                    endif()
+                endforeach()
+            endif()
+            if(_INCLUDE_OP)
+                add_subdirectory(${SUB_DIR}/${ARCH_DIR})
+            endif()
         endif()
     endforeach()
 endmacro()
 
 # usage: add_sources()
-# Build one shared library per op: libops_multimodal_fusion_<op>.so, directly output into
-# the Python package dir so it can be loaded via torch.ops.load_library.
+# Collect source files from current op directory and accumulate into global OP_ALL_SOURCES.
 macro(add_sources)
     # clear CMAKE_CXX_FLAGS to avoid affecting bisheng compile
     unset(CMAKE_CXX_FLAGS)
@@ -40,7 +52,7 @@ macro(add_sources)
     message(STATUS "OP_NAME: ${OP_NAME}")
 
     # get compile flags for current op
-    set(COMPILE_FLAGS "--npu-arch=${NPU_ARCH} -xasc ")
+    set(COMPILE_FLAGS "--npu-arch=${NPU_ARCH} -xasc --cce-long-scbz=true --gcc-toolchain=/usr -mno-outline-atomics -I${ASCEND_DIR}/${SYSTEM_PREFIX}/asc/include/tiling -I${ASCEND_DIR}/${SYSTEM_PREFIX}/asc/include/utils ")
     message(STATUS "COMPILE FLAGS: ${COMPILE_FLAGS}")
 
     # recursively get source files
@@ -50,24 +62,41 @@ macro(add_sources)
         message(FATAL_ERROR "No source files found in ${CMAKE_CURRENT_SOURCE_DIR}")
     endif()
 
-    # set_source_files_properties
-    set_source_files_properties(
-        ${SOURCE_FILES} PROPERTIES
-        LANGUAGE CXX
-        COMPILE_FLAGS "${COMPILE_FLAGS}"
-    )
+    # accumulate sources into global property
+    foreach(SRC ${SOURCE_FILES})
+        set(FULL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${SRC}")
+        set_property(SOURCE ${FULL_PATH} PROPERTY COMPILE_FLAGS "${COMPILE_FLAGS}")
+        set_property(SOURCE ${FULL_PATH} PROPERTY LANGUAGE CXX)
+        set_property(GLOBAL APPEND PROPERTY OP_ALL_SOURCES ${FULL_PATH})
+    endforeach()
+endmacro()
 
-    # set target name: ops_multimodal_fusion_<op>  ->  libops_multimodal_fusion_<op>.so
-    set(TARGET_NAME ops_multimodal_fusion_${OP_NAME})
-    add_library(${TARGET_NAME} SHARED ${SOURCE_FILES})
+# usage: add_op_library()
+# Create a single shared library from all collected sources.
+function(add_op_library)
+    get_property(ALL_SOURCES GLOBAL PROPERTY OP_ALL_SOURCES)
+
+    set(COMPILE_FLAGS "--npu-arch=${NPU_ARCH} -xasc --cce-long-scbz=true --gcc-toolchain=/usr -mno-outline-atomics -I${ASCEND_DIR}/${SYSTEM_PREFIX}/asc/include/tiling -I${ASCEND_DIR}/${SYSTEM_PREFIX}/asc/include/utils ")
+    foreach(SRC ${ALL_SOURCES})
+        set_source_files_properties(${SRC} PROPERTIES LANGUAGE CXX COMPILE_FLAGS "${COMPILE_FLAGS}")
+    endforeach()
+
+    set(TARGET_NAME ops_multimodal_fusion)
+    add_library(${TARGET_NAME} SHARED ${ALL_SOURCES})
     set_target_properties(${TARGET_NAME} PROPERTIES
         POSITION_INDEPENDENT_CODE ON
         PREFIX "lib"
         SUFFIX ".so"
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${PYTHON_PACKAGE_DIR}
+        LINKER_LANGUAGE CXX
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
     )
     target_compile_options(${TARGET_NAME} PRIVATE ${COMPILE_OPTIONS})
-    target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${INCLUDE_DIRECTORIES})
+    target_include_directories(${TARGET_NAME} PRIVATE ${INCLUDE_DIRECTORIES})
     target_link_directories(${TARGET_NAME} PRIVATE ${LINK_DIRECTORIES})
     target_link_libraries(${TARGET_NAME} PRIVATE ${LINK_LIBRARIES})
-endmacro()
+
+    get_property(COMPILE_DEFS GLOBAL PROPERTY OP_COMPILE_DEFINITIONS)
+    if(COMPILE_DEFS)
+        target_compile_definitions(${TARGET_NAME} PRIVATE ${COMPILE_DEFS})
+    endif()
+endfunction()

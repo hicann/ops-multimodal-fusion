@@ -8,7 +8,7 @@
 # See LICENSE in the root of the software repository for the full text of the License.
 
 add_sources()
-target_compile_definitions(ops_multimodal_fusion_dequant_swiglu_quant PRIVATE
+set_property(GLOBAL APPEND PROPERTY OP_COMPILE_DEFINITIONS
     DSQ_ENABLE_INT32_INT8
     DSQ_ENABLE_BF16_INT8
     DSQ_ENABLE_FP16_INT8

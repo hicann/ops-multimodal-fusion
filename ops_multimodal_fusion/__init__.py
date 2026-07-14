@@ -9,17 +9,15 @@
 """Ops Multimodal Fusion"""
 __version__ = "1.0.0"
 
-import glob
 import os
 
 import torch
 
 _pkg_dir = os.path.dirname(__file__)
-_so_list = sorted(glob.glob(os.path.join(_pkg_dir, "libops_multimodal_fusion_*.so")))
-if not _so_list:
+_so_path = os.path.join(_pkg_dir, "libops_multimodal_fusion.so")
+if not os.path.exists(_so_path):
     raise ImportError(
-        f"No ops_multimodal_fusion op libraries found under {_pkg_dir}. "
+        f"libops_multimodal_fusion.so not found under {_pkg_dir}. "
         "Please make sure `ops_multimodal_fusion` is properly installed."
     )
-for _so in _so_list:
-    torch.ops.load_library(_so)
+torch.ops.load_library(_so_path)

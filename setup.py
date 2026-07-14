@@ -11,10 +11,12 @@
 
 import os
 import sys
+import glob as glob_module
 import shutil
 import subprocess
 import logging
 from setuptools import setup, find_packages, Distribution, Command
+from setuptools.command.build_py import build_py
 from wheel.bdist_wheel import bdist_wheel
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -95,7 +97,6 @@ class CMakeBuildCommand(Command):
     def run(self):
         cpu_count = os.cpu_count() or 2
         num_jobs = str(cpu_count)
-        # Get Torch and Torch NPU paths
         import torch
         torch_cmake_path = torch.utils.cmake_prefix_path
         torch_dir = os.path.join(torch_cmake_path, "Torch")
@@ -104,34 +105,52 @@ class CMakeBuildCommand(Command):
         torch_npu_path = os.path.dirname(torch_npu.__file__)
         logging.info(f"Using Torch NPU path: {torch_npu_path}")
 
-        # Get NPU_ARCH from environment variable or set default
         npu_arch = os.environ.get('NPU_ARCH', 'dav-3510')
         arch_dir = os.environ.get('ARCH_DIR', 'arch35')
+        op_list = os.environ.get('OP_LIST', '')
         logging.info(f"Using NPU_ARCH: {npu_arch}")
         logging.info(f"Using ARCH_DIR: {arch_dir}")
+        if op_list:
+            logging.info(f"Building ops: {op_list}")
 
-        # Build the CMake project
         build_temp = os.path.join(os.getcwd(), 'build')
         cmake_config_command = ['cmake', '-S', os.getcwd(), '-B', build_temp,
                                 '-DCMAKE_BUILD_TYPE=Release',
                                 f'-DTorch_DIR={torch_dir}',
                                 f'-DTORCH_NPU_PATH={torch_npu_path}',
                                 f'-DNPU_ARCH={npu_arch}',
-                                f'-DARCH_DIR={arch_dir}'
+                                f'-DARCH_DIR={arch_dir}',
+                                f'-DOP_LIST={op_list}'
                                 ]
         subprocess.check_call(cmake_config_command, cwd=os.getcwd())
-        subprocess.check_call(
-            ['cmake', '--build', build_temp, '--config', 'Release',
-             '--parallel', num_jobs],
-            cwd=os.getcwd()
-        )
+
+        build_command = ['cmake', '--build', build_temp, '--config', 'Release',
+                         '--parallel', num_jobs]
+        subprocess.check_call(build_command, cwd=os.getcwd())
+
         logging.info("CMake extensions built successfully.")
+
+
+class BuildPyWithSo(build_py):
+    """
+    Override build_py to copy .so from build/lib/ into the build staging area.
+    """
+    def run(self):
+        super().run()
+        cmake_lib_dir = os.path.join(os.getcwd(), 'build', 'lib')
+        pkg_build_dir = os.path.join(self.build_lib, PACKAGE_NAME)
+        os.makedirs(pkg_build_dir, exist_ok=True)
+        for so_file in glob_module.glob(os.path.join(cmake_lib_dir, 'libops_multimodal_fusion*.so')):
+            dst = os.path.join(pkg_build_dir, os.path.basename(so_file))
+            shutil.copy2(so_file, dst)
+            logging.info(f"Copied {os.path.basename(so_file)} to {pkg_build_dir}/")
 
 
 cmdclass = {
     'clean': CleanCommand,
     'bdist_wheel': ABI3Wheel,
     'cmake_build': CMakeBuildCommand,
+    'build_py': BuildPyWithSo,
 }
 
 
@@ -140,7 +159,6 @@ setup(
     version=VERSION,
     description=DESCRIPTION,
     packages=find_packages(),
-    package_data={PACKAGE_NAME: ['libops_multimodal_fusion_*.so']},
     distclass=BinaryDistribution,
     cmdclass=cmdclass,
     zip_safe=False,
