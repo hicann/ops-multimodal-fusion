@@ -36,6 +36,11 @@ Usage:
   $0 --ops=<a>[,<b>,...]            Build specified ops and produce wheel. Names are separated
                                       by ','. Example: --ops=add,rms_norm
   $0 --soc=<soc> --ops=<a>[,...]    Combine both flags.
+  $0 --filelist=<path>              Read a file with modified paths (one per line),
+                                      auto-detect affected ops and SoCs, then build.
+                                      - Only arch35/ touched  → ascend950
+                                      - Only arch22/ touched  → ascend910b (same arch as ascend910_93)
+                                      - Common files touched  → all SoCs the op supports
   $0 -h | --help                    Show this help.
 
 Available ops:
@@ -70,6 +75,85 @@ parse_ops_arg() {
             exit 1
         fi
     done
+}
+
+# Parse --filelist=<path>. Reads a file where each line is a modified path.
+# Sets globals: ARCH22_OPS, ARCH35_OPS, TOUCHED_ARCH22, TOUCHED_ARCH35.
+parse_filelist() {
+    local file="$1"
+    [[ -f "$file" ]] || { echo "ERROR: filelist '$file' not found" >&2; exit 1; }
+
+    TOUCHED_ARCH22=0
+    TOUCHED_ARCH35=0
+    ARCH22_OPS=()
+    ARCH35_OPS=()
+
+    local _line _cat _op _global=0
+    while IFS= read -r _line || [[ -n "$_line" ]]; do
+        [[ -z "$_line" ]] && continue
+        _line="${_line#./}"
+
+        if [[ "$_line" =~ ^applications/([^/]+)/([^/]+)/arch22/ ]]; then
+            TOUCHED_ARCH22=1
+            ARCH22_OPS+=("${BASH_REMATCH[2]}")
+        elif [[ "$_line" =~ ^applications/([^/]+)/([^/]+)/arch35/ ]]; then
+            TOUCHED_ARCH35=1
+            ARCH35_OPS+=("${BASH_REMATCH[2]}")
+        elif [[ "$_line" =~ ^applications/([^/]+)/([^/]+)/ ]]; then
+            # Op-level common file (outside arch*/) — build for all its supported SoCs.
+            TOUCHED_ARCH22=1
+            TOUCHED_ARCH35=1
+            _cat="${BASH_REMATCH[1]}"
+            _op="${BASH_REMATCH[2]}"
+            [[ -d "applications/${_cat}/${_op}/arch22" ]] && ARCH22_OPS+=("$_op")
+            [[ -d "applications/${_cat}/${_op}/arch35" ]] && ARCH35_OPS+=("$_op")
+        else
+            # Global common file (build.sh, CMakeLists.txt, etc.) — one op per arch to verify the flow.
+            _global=1
+            break
+        fi
+    done < "$file"
+
+    if [[ $_global -eq 1 ]]; then
+        TOUCHED_ARCH22=1
+        TOUCHED_ARCH35=1
+        ARCH22_OPS=()
+        ARCH35_OPS=()
+        local _d
+        for _d in applications/*/*/; do
+            _op="$(basename "$_d")"
+            [[ -d "${_d}arch22" && ${#ARCH22_OPS[@]} -eq 0 ]] && ARCH22_OPS+=("$_op")
+            [[ -d "${_d}arch35" && ${#ARCH35_OPS[@]} -eq 0 ]] && ARCH35_OPS+=("$_op")
+            [[ ${#ARCH22_OPS[@]} -gt 0 && ${#ARCH35_OPS[@]} -gt 0 ]] && break
+        done
+    fi
+
+    # Deduplicate.
+    local _sorted _op2
+    if [[ ${#ARCH22_OPS[@]} -gt 0 ]]; then
+        _sorted=()
+        while IFS= read -r _op2; do
+            [[ -n "$_op2" ]] && _sorted+=("$_op2")
+        done < <(printf '%s\n' "${ARCH22_OPS[@]}" | sort -u)
+        ARCH22_OPS=("${_sorted[@]}")
+    fi
+    if [[ ${#ARCH35_OPS[@]} -gt 0 ]]; then
+        _sorted=()
+        while IFS= read -r _op2; do
+            [[ -n "$_op2" ]] && _sorted+=("$_op2")
+        done < <(printf '%s\n' "${ARCH35_OPS[@]}" | sort -u)
+        ARCH35_OPS=("${_sorted[@]}")
+    fi
+
+    if [[ ${#ARCH22_OPS[@]} -eq 0 && ${#ARCH35_OPS[@]} -eq 0 ]]; then
+        if [[ $TOUCHED_ARCH22 -eq 1 || $TOUCHED_ARCH35 -eq 1 ]]; then
+            echo "ERROR: common files reference operators whose arch directories do not exist." >&2
+            echo "  Ensure arch-specific files (under arch22/ or arch35/) are included in the filelist." >&2
+        else
+            echo "ERROR: no recognizable operator or arch paths found in '$file'" >&2
+        fi
+        exit 1
+    fi
 }
 
 build_wheel() {
@@ -113,6 +197,7 @@ build_wheel() {
 }
 
 OPS_ARG=""
+FILELIST=""
 SOC=${SOC:-ascend950}
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -126,6 +211,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --ops=*)
             OPS_ARG="$1"
+            shift
+            ;;
+        --filelist=*)
+            FILELIST="${1#--filelist=}"
             shift
             ;;
         *)
@@ -143,7 +232,33 @@ if [[ -z "$NPU_ARCH" ]]; then
     exit 1
 fi
 
-if [[ -n "$OPS_ARG" ]]; then
-    parse_ops_arg "$OPS_ARG"
+if [[ -n "$FILELIST" && -n "$OPS_ARG" ]]; then
+    echo "ERROR: --filelist and --ops are mutually exclusive" >&2
+    exit 1
 fi
-build_wheel
+
+if [[ -n "$FILELIST" ]]; then
+    parse_filelist "$FILELIST"
+
+    _soc_list=()
+    [[ $TOUCHED_ARCH22 -eq 1 && ${#ARCH22_OPS[@]} -gt 0 ]] && _soc_list+=(ascend910b)
+    [[ $TOUCHED_ARCH35 -eq 1 && ${#ARCH35_OPS[@]} -gt 0 ]] && _soc_list+=(ascend950)
+
+    for _build_soc in "${_soc_list[@]}"; do
+        SOC="$_build_soc"
+        NPU_ARCH=$(resolve_npuarch "$SOC")
+        ARCH_DIR=$(resolve_arch_dir "$SOC")
+        if [[ "$ARCH_DIR" == "arch22" ]]; then
+            OP_NAMES=("${ARCH22_OPS[@]}")
+        else
+            OP_NAMES=("${ARCH35_OPS[@]}")
+        fi
+        echo "=== [$SOC] arch=$ARCH_DIR, ${#OP_NAMES[@]} op(s) ==="
+        build_wheel
+    done
+elif [[ -n "$OPS_ARG" ]]; then
+    parse_ops_arg "$OPS_ARG"
+    build_wheel
+else
+    build_wheel
+fi
