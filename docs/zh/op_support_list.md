@@ -108,6 +108,7 @@
 | scaled_modified_bessel_k0 | `torch.ops.ops_multimodal_fusion.scaled_modified_bessel_k0(Tensor x) -> Tensor` | - | - | ✓ |
 | scaled_modified_bessel_k1 | `torch.ops.ops_multimodal_fusion.scaled_modified_bessel_k1(Tensor x) -> Tensor` | - | - | ✓ |
 | searchsorted | `torch.ops.ops_multimodal_fusion.searchsorted(Tensor sorted_sequence, Tensor values, bool out_int32=False, bool right=False) -> Tensor` | - | - | ✓ |
+| semi_structured_linear | `torch.ops.ops_multimodal_fusion.semi_structured_linear(Tensor x, Tensor w_compressed, Tensor metadata, Tensor bias, int m, int k) -> Tensor` | - | - | ✓ |
 | shifted_chebyshev_polynomial_t | `torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_t(Tensor x, Tensor n) -> Tensor` | - | - | ✓ |
 | shifted_chebyshev_polynomial_u | `torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_u(Tensor x, Tensor n) -> Tensor` | - | - | ✓ |
 | shifted_chebyshev_polynomial_v | `torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_v(Tensor x, Tensor n) -> Tensor` | - | - | ✓ |
@@ -115,6 +116,9 @@
 | sigmoid | `torch.ops.ops_multimodal_fusion.sigmoid(Tensor x) -> Tensor` | - | - | ✓ |
 | sin | `torch.ops.ops_multimodal_fusion.sin(Tensor x) -> Tensor` | - | - | ✓ |
 | sinc | `torch.ops.ops_multimodal_fusion.sinc(Tensor x) -> Tensor` | - | - | ✓ |
+| sparse_binary_intersect | `torch.ops.ops_multimodal_fusion.sparse_binary_intersect(Tensor indices_a, Tensor values_a, Tensor indices_b, Tensor values_b) -> Tensor[]` | - | - | ✓ |
+| sparse_mask_intersection | `torch.ops.ops_multimodal_fusion.sparse_mask_intersection(Tensor source, Tensor mask_indices) -> Tensor` | - | - | ✓ |
+| sparse_mask_projection | `torch.ops.ops_multimodal_fusion.sparse_mask_projection(Tensor sparse_indices, Tensor sparse_values, Tensor mask_indices) -> Tensor` | - | - | ✓ |
 | spherical_bessel_j0 | `torch.ops.ops_multimodal_fusion.spherical_bessel_j0(Tensor x) -> Tensor` | - | - | ✓ |
 | sqrt | `torch.ops.ops_multimodal_fusion.sqrt(Tensor x) -> Tensor` | - | - | ✓ |
 | sum | `torch.ops.ops_multimodal_fusion.sum(Tensor x, int dim, bool keepdim) -> Tensor` | - | - | ✓ |
