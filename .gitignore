@@ -23,3 +23,12 @@ __pycache__/
 .opencode/
 .claude/
 .arts/
+opencode.json
+
+# agent
+AGENTS.md
+.agent
+.cannbot
+
+# Local model config (generated from template)
+agent/agents/model_config.json
