@@ -5,6 +5,7 @@
 | abs    | `torch.ops.ops_multimodal_fusion.abs(Tensor x) -> Tensor` | ✓ | ✓ | ✓ |
 | adaptive_avg_pool2d | `torch.ops.ops_multimodal_fusion.adaptive_avg_pool2d(Tensor self, int[2] output_size) -> Tensor` | - | - | ✓ |
 | add | `torch.ops.ops_multimodal_fusion.add(Tensor x, Tensor y) -> Tensor` | - | - | ✓ |
+| addmv | `torch.ops.ops_multimodal_fusion.addmv(Tensor self, Tensor mat, Tensor vec, Scalar beta=1, Scalar alpha=1) -> Tensor` | - | - | ✓ |
 | airy_ai | `torch.ops.ops_multimodal_fusion.airy_ai(Tensor x) -> Tensor` | - | - | ✓ |
 | angle | `torch.ops.ops_multimodal_fusion.angle(Tensor input) -> Tensor` | - | - | ✓ |
 | any | `torch.ops.ops_multimodal_fusion.any(Tensor x, int dim, bool keepdim) -> Tensor` | - | - | ✓ |
