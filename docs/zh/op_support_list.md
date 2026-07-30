@@ -24,6 +24,7 @@
 | c2_boolean_unmask | `torch.ops.ops_multimodal_fusion.c2_boolean_unmask(Tensor[] inputs) -> Tensor` | - | - | ✓ |
 | c2_bucketize | `torch.ops.ops_multimodal_fusion.c2_bucketize(Tensor self, float[] boundaries) -> Tensor` | - | - | ✓ |
 | c2_cbrt | `torch.ops.ops_multimodal_fusion.c2_cbrt(Tensor self) -> Tensor` | - | - | ✓ |
+| c2_lars | `torch.ops.ops_multimodal_fusion.c2_lars(Tensor X, Tensor dX, Tensor wd, Tensor trust, Tensor lr_max, float offset=0.5, float lr_min=0.02) -> Tensor` | - | - | ✓ |
 | cauchy | `torch.ops.ops_multimodal_fusion.cauchy(Tensor x, float median=0.0, float sigma=1.0, int seed=0) -> Tensor` | - | - | ✓ |
 | cdist_backward | `torch.ops.ops_multimodal_fusion.cdist_backward(Tensor grad, Tensor x1, Tensor x2, float p, Tensor cdist) -> Tensor` | - | - | ✓ |
 | chebyshev_polynomial_t | `torch.ops.ops_multimodal_fusion.chebyshev_polynomial_t(Tensor x, Tensor n) -> Tensor` | - | - | ✓ |
