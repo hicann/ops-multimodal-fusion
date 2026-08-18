@@ -72,6 +72,8 @@ PR上库要求：
 - 精度要求：新贡献算子需满足精度标准，具体请参见[生态算子开源精度标准](https://gitcode.com/cann/opbase/blob/master/docs/zh/ops_precision_standard/experimental_standard.md)。无论是否使用 Agent，均须在 PR 描述中附上精度测试报告：
   - 若算子由第 3 步的 Agent 生成，请在 PR 描述中附上 Agent 输出的精度测试报告。
   - 若未使用 Agent，请借助 CANNBot 的[黑盒测试 skill](https://gitcode.com/cann/cannbot-skills/tree/master/ops/ascendc-st-design)、[白盒测试 skill](https://gitcode.com/cann/cannbot-skills/tree/master/ops/ascendc-whitebox-design) 生成用例进行验证，并在 PR 描述中附上精度测试报告。
+  - 精度测试报告请参考[精度验收报告模版](docs/zh/develop/precision_acceptance_template.md)撰写。
+
 - 合规检查：
   - 代码是否符合《[C++ 编程规范](https://gitcode.com/cann/community/blob/master/contributor/coding-standards/C++%20Coding%20standards.md)》
   - 代码是否编译通过
