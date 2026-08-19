@@ -15,6 +15,7 @@ import glob as glob_module
 import shutil
 import subprocess
 import logging
+from distutils.errors import DistutilsError
 from setuptools import setup, find_packages, Distribution, Command
 from setuptools.command.build_py import build_py
 from wheel.bdist_wheel import bdist_wheel
@@ -40,18 +41,44 @@ class CleanCommand(Command):
     def finalize_options(self):
         pass
 
+    @staticmethod
+    def _remove_folder(folder, errors):
+        if not os.path.exists(folder):
+            return
+        try:
+            shutil.rmtree(folder)
+            logging.info(f"Removed folder: {folder}")
+        except OSError as e:
+            errors.append(f"{folder}: {e}")
+
+    @staticmethod
+    def _remove_artifact(file_path, in_pkg, errors):
+        parent = os.path.basename(os.path.dirname(file_path))
+        is_cache = file_path.endswith(('.pyc', '.pyo')) and parent == '__pycache__'
+        is_lib = in_pkg and file_path.endswith(('.so', '.abi3.so'))
+        if not (is_cache or is_lib):
+            return
+        try:
+            os.remove(file_path)
+            logging.info(f"Removed file: {file_path}")
+        except OSError as e:
+            errors.append(f"{file_path}: {e}")
+
     def run(self):
+        errors = []
         folders_to_remove = ['build', 'dist', f'{PACKAGE_NAME}.egg-info']
         for folder in folders_to_remove:
-            if os.path.exists(folder):
-                shutil.rmtree(folder)
-                logging.info(f"Removed folder: {folder}")
-        for root, _, files in os.walk('.'):
+            self._remove_folder(folder, errors)
+
+        skip_dirs = {'.git', '.hg', '.svn', '.venv', 'venv', 'env', 'node_modules'}
+        for root, dirs, files in os.walk('.'):
+            dirs[:] = [d for d in dirs if d not in skip_dirs]
+            in_pkg = root.startswith(f'./{PACKAGE_NAME}')
             for file in files:
-                if file.endswith(('.pyc', '.pyo', '.so', '.abi3.so')):
-                    file_path = os.path.join(root, file)
-                    os.remove(file_path)
-                    logging.info(f"Removed file: {file_path}")
+                self._remove_artifact(os.path.join(root, file), in_pkg, errors)
+
+        if errors:
+            raise DistutilsError("clean failed for:\n  " + "\n  ".join(errors))
         logging.info("Cleaned build artifacts.")
 
 
@@ -136,11 +163,17 @@ class BuildPyWithSo(build_py):
     Override build_py to copy .so from build/lib/ into the build staging area.
     """
     def run(self):
+        self.run_command('cmake_build')
         super().run()
         cmake_lib_dir = os.path.join(os.getcwd(), 'build', 'lib')
         pkg_build_dir = os.path.join(self.build_lib, PACKAGE_NAME)
         os.makedirs(pkg_build_dir, exist_ok=True)
-        for so_file in glob_module.glob(os.path.join(cmake_lib_dir, 'libops_multimodal_fusion*.so')):
+        so_files = glob_module.glob(os.path.join(cmake_lib_dir, 'libops_multimodal_fusion*.so'))
+        if not so_files:
+            raise RuntimeError(
+                f"No libops_multimodal_fusion*.so found in {cmake_lib_dir}; "
+                "cmake build may have failed or the output path has changed")
+        for so_file in so_files:
             dst = os.path.join(pkg_build_dir, os.path.basename(so_file))
             shutil.copy2(so_file, dst)
             logging.info(f"Copied {os.path.basename(so_file)} to {pkg_build_dir}/")
