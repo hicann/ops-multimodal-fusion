@@ -23,6 +23,9 @@
             <filefilter name="defaultPolicyFilter" desc="Filters for compatibility，license header policies">
                 <filteritem type="filename" name="*.yaml" desc="YAML config files"/>
                 <filteritem type="filename" name="*.yml" desc="YAML config files"/>
+                <filteritem type="filepath" name="applications/autonomous_driving/common/pcdet_stub/.*" desc="OpenPCDet derived files, declared in Third_Party_Open_Source_Software_List.yaml"/>
+                <filteritem type="filepath" name="applications/autonomous_driving/common/patches/.*" desc="mmcv/mmdet3d derived files, declared in Third_Party_Open_Source_Software_List.yaml"/>
+                <filteritem type="filepath" name="applications/autonomous_driving/common/kitti_eval/.*" desc="mmdet3d derived files, declared in Third_Party_Open_Source_Software_List.yaml"/>
             </filefilter>
             <filefilter name="copyrightPolicyFilter" desc="Filters for copyright header policies">
             </filefilter>

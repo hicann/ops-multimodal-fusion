@@ -32,3 +32,8 @@ AGENTS.md
 
 # Local model config (generated from template)
 agent/agents/model_config.json
+
+# autonomous_driving 数据集、权重与评估结果（不纳入版本管理，README 提供下载方式）
+applications/autonomous_driving/data/
+applications/autonomous_driving/checkpoints/
+applications/autonomous_driving/results/

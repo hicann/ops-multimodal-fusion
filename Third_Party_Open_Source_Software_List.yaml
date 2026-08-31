@@ -12,3 +12,19 @@ pyyaml:
   version: 6.0.x
   license: MIT
   path: requirements.txt
+
+mmcv:
+  version: 2.2.0
+  license: Apache-2.0
+  path: applications/autonomous_driving/common/patches/mmcv/
+
+mmdet3d:
+  version: 1.4.0
+  license: Apache-2.0
+  path:
+    - applications/autonomous_driving/common/patches/mmdet3d/
+    - applications/autonomous_driving/common/kitti_eval/
+
+OpenPCDet:
+  license: Apache-2.0
+  path: applications/autonomous_driving/common/pcdet_stub/
