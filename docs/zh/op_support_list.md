@@ -50,6 +50,8 @@
 | foreach_ceil | `torch.ops.ops_multimodal_fusion.foreach_ceil(Tensor[] tensors) -> Tensor[]` | - | - | ✓ |
 | foreach_floor | `torch.ops.ops_multimodal_fusion.foreach_floor(Tensor[] tensors) -> Tensor[]` | - | - | ✓ |
 | foreach_frac | `torch.ops.ops_multimodal_fusion.foreach_frac(Tensor[] tensors) -> Tensor[]` | - | - | ✓ |
+| foreach_lgamma | `torch.ops.ops_multimodal_fusion.foreach_lgamma(Tensor[] tensors) -> Tensor[]` | - | - | ✓ |
+| foreach_trunc | `torch.ops.ops_multimodal_fusion.foreach_trunc(Tensor[] tensors) -> Tensor[]` | - | - | ✓ |
 | fractional_max_pool2d | `torch.ops.ops_multimodal_fusion.fractional_max_pool2d(Tensor self, int[2] kernel_size, int[2] output_size, Tensor random_samples) -> (Tensor, Tensor)` | - | - | ✓ |
 | fractional_max_pool3d | `torch.ops.ops_multimodal_fusion.fractional_max_pool3d(Tensor self, int[3] kernel_size, int[3] output_size, Tensor random_samples) -> (Tensor, Tensor)` | - | - | ✓ |
 | frexp | `torch.ops.ops_multimodal_fusion.frexp(Tensor x) -> (Tensor mantissa, Tensor exponent)` | - | - | ✓ |

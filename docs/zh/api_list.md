@@ -2159,7 +2159,96 @@ torch.ops.ops_multimodal_fusion.foreach_frac(Tensor[] tensors) -> Tensor[]
 - 测试文件：`tests/foreach_frac/test_foreach_frac.py`
 
 ---
-### 2.47 fractional_max_pool2d
+### 2.47 foreach_lgamma
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.foreach_lgamma(Tensor[] tensors) -> Tensor[]
+```
+
+#### 功能
+
+对张量列表中每个张量逐元素计算 log-Gamma（lgamma = log|Γ(x)|），返回结果张量列表。仅支持 float32。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `tensors` | 输入张量列表，元素须为 float32 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐张量 lgamma 后的结果张量列表 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/foreach_lgamma/arch35/foreach_lgamma.asc`
+- 测试文件：`tests/foreach_lgamma/test_foreach_lgamma.py`
+
+---
+### 2.48 foreach_trunc
+
+#### 接口签名
+
+```python
+torch.ops.ops_multimodal_fusion.foreach_trunc(Tensor[] tensors) -> Tensor[]
+```
+
+#### 功能
+
+对张量列表中每个张量逐元素向零取整（trunc），返回结果张量列表。支持 float32 / float16。
+
+#### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `tensors` | 输入张量列表，元素须为 float32 或 float16 |
+
+#### 返回值
+
+| 类型 | 说明 |
+|------|------|
+| Tensor | 逐张量 trunc 后的结果张量列表，dtype 同输入 |
+
+#### 支持的数据类型
+
+| 数据类型 | PyTorch 类型 | 支持状态 |
+|----------|--------------|----------|
+| FP32 | `torch.float32` | ✅ |
+| FP16 | `torch.float16` | ✅ |
+
+#### 支持的芯片
+
+| 芯片类型 | 架构代号 | 支持状态 |
+|----------|----------|----------|
+| Atlas A2 训练/推理系列 | arch22 | - |
+| Atlas A3 训练/推理系列 | arch22 | - |
+| 950 系列 | arch35 | ✅ |
+
+#### 源码位置
+
+- 算子实现：`applications/llm/foreach_trunc/arch35/foreach_trunc.asc`
+- 测试文件：`tests/foreach_trunc/test_foreach_trunc.py`
+
+---
+### 2.49 fractional_max_pool2d
 
 #### 接口签名
 
@@ -2208,7 +2297,7 @@ torch.ops.ops_multimodal_fusion.fractional_max_pool2d(Tensor self, int[2] kernel
 - 测试文件：`tests/fractional_max_pool2d/test_fractional_max_pool2d.py`
 
 ---
-### 2.48 fractional_max_pool3d
+### 2.50 fractional_max_pool3d
 
 #### 接口签名
 
@@ -2257,7 +2346,7 @@ torch.ops.ops_multimodal_fusion.fractional_max_pool3d(Tensor self, int[3] kernel
 - 测试文件：`tests/fractional_max_pool3d/test_fractional_max_pool3d.py`
 
 ---
-### 2.49 frexp
+### 2.51 frexp
 
 #### 接口签名
 
@@ -2302,7 +2391,7 @@ torch.ops.ops_multimodal_fusion.frexp(Tensor x) -> (Tensor mantissa, Tensor expo
 - 测试文件：`tests/frexp/test_frexp.py`
 
 ---
-### 2.50 gamma
+### 2.52 gamma
 
 #### 接口签名
 
@@ -2348,7 +2437,7 @@ torch.ops.ops_multimodal_fusion.gamma(Tensor alpha, int seed=0) -> Tensor
 - 测试文件：`tests/gamma/test_gamma.py`
 
 ---
-### 2.51 gelu
+### 2.53 gelu
 
 #### 接口签名
 
@@ -2392,7 +2481,7 @@ torch.ops.ops_multimodal_fusion.gelu(Tensor x) -> Tensor
 - 测试文件：`tests/gelu/test_gelu.py`
 
 ---
-### 2.52 geometric
+### 2.54 geometric
 
 #### 接口签名
 
@@ -2439,7 +2528,7 @@ torch.ops.ops_multimodal_fusion.geometric(Tensor x, float p, int seed=0) -> Tens
 - 测试文件：`tests/geometric/test_geometric.py`
 
 ---
-### 2.53 gru_cell
+### 2.55 gru_cell
 
 #### 接口签名
 
@@ -2489,7 +2578,7 @@ torch.ops.ops_multimodal_fusion.gru_cell(Tensor input, Tensor hx, Tensor weight_
 - 测试文件：`tests/gru_cell/test_gru_cell.py`
 
 ---
-### 2.54 hermite_polynomial_h
+### 2.56 hermite_polynomial_h
 
 #### 接口签名
 
@@ -2534,7 +2623,7 @@ torch.ops.ops_multimodal_fusion.hermite_polynomial_h(Tensor x, Tensor n) -> Tens
 - 测试文件：`tests/hermite_polynomial_h/test_hermite_polynomial_h.py`
 
 ---
-### 2.55 hermite_polynomial_he
+### 2.57 hermite_polynomial_he
 
 #### 接口签名
 
@@ -2579,7 +2668,7 @@ torch.ops.ops_multimodal_fusion.hermite_polynomial_he(Tensor x, Tensor n) -> Ten
 - 测试文件：`tests/hermite_polynomial_he/test_hermite_polynomial_he.py`
 
 ---
-### 2.56 hypot
+### 2.58 hypot
 
 #### 接口签名
 
@@ -2625,7 +2714,7 @@ torch.ops.ops_multimodal_fusion.hypot(Tensor x, Tensor y) -> Tensor
 - 测试文件：`tests/hypot/test_hypot.py`
 
 ---
-### 2.57 igamma
+### 2.59 igamma
 
 #### 接口签名
 
@@ -2670,7 +2759,7 @@ torch.ops.ops_multimodal_fusion.igamma(Tensor a, Tensor x) -> Tensor
 - 测试文件：`tests/igamma/test_igamma.py`
 
 ---
-### 2.58 igammac
+### 2.60 igammac
 
 #### 接口签名
 
@@ -2715,7 +2804,7 @@ torch.ops.ops_multimodal_fusion.igammac(Tensor a, Tensor x) -> Tensor
 - 测试文件：`tests/igammac/test_igammac.py`
 
 ---
-### 2.59 index_copy
+### 2.61 index_copy
 
 #### 接口签名
 
@@ -2764,7 +2853,7 @@ torch.ops.ops_multimodal_fusion.index_copy(Tensor self, int dim, Tensor index, T
 - 测试文件：`tests/index_copy/test_index_copy.py`
 
 ---
-### 2.60 index_reduce
+### 2.62 index_reduce
 
 #### 接口签名
 
@@ -2815,7 +2904,7 @@ torch.ops.ops_multimodal_fusion.index_reduce(Tensor self, int dim, Tensor index,
 - 测试文件：`tests/index_reduce/test_index_reduce.py`
 
 ---
-### 2.61 int_repr
+### 2.63 int_repr
 
 #### 接口签名
 
@@ -2861,7 +2950,7 @@ torch.ops.ops_multimodal_fusion.int_repr(Tensor x) -> Tensor
 - 测试文件：`tests/int_repr/test_int_repr.py`
 
 ---
-### 2.62 kaiserwindow
+### 2.64 kaiserwindow
 
 #### 接口签名
 
@@ -2908,7 +2997,7 @@ torch.ops.ops_multimodal_fusion.kaiserwindow(Tensor x, float beta, int window_le
 - 测试文件：`tests/kaiserwindow/test_kaiserwindow.py`
 
 ---
-### 2.63 kthvalue
+### 2.65 kthvalue
 
 #### 接口签名
 
@@ -2957,7 +3046,7 @@ torch.ops.ops_multimodal_fusion.kthvalue(Tensor x, int k, int dim, bool keepdim)
 - 测试文件：`tests/kthvalue/test_kthvalue.py`
 
 ---
-### 2.64 laguerre_polynomial_l
+### 2.66 laguerre_polynomial_l
 
 #### 接口签名
 
@@ -3002,7 +3091,7 @@ torch.ops.ops_multimodal_fusion.laguerre_polynomial_l(Tensor x, Tensor n) -> Ten
 - 测试文件：`tests/laguerre_polynomial_l/test_laguerre_polynomial_l.py`
 
 ---
-### 2.65 layer_norm
+### 2.67 layer_norm
 
 #### 接口签名
 
@@ -3050,7 +3139,7 @@ torch.ops.ops_multimodal_fusion.layer_norm(Tensor x, Tensor gamma, Tensor beta, 
 - 测试文件：`tests/layer_norm/test_layer_norm.py`
 
 ---
-### 2.66 lcm
+### 2.68 lcm
 
 #### 接口签名
 
@@ -3095,7 +3184,7 @@ torch.ops.ops_multimodal_fusion.lcm(Tensor a, Tensor b) -> Tensor
 - 测试文件：`tests/lcm/test_lcm.py`
 
 ---
-### 2.67 leftshift
+### 2.69 leftshift
 
 #### 接口签名
 
@@ -3140,7 +3229,7 @@ torch.ops.ops_multimodal_fusion.leftshift(Tensor a, int b) -> Tensor
 - 测试文件：`tests/leftshift/test_leftshift.py`
 
 ---
-### 2.68 legendre_polynomial_p
+### 2.70 legendre_polynomial_p
 
 #### 接口签名
 
@@ -3185,7 +3274,7 @@ torch.ops.ops_multimodal_fusion.legendre_polynomial_p(Tensor x, Tensor n) -> Ten
 - 测试文件：`tests/legendre_polynomial_p/test_legendre_polynomial_p.py`
 
 ---
-### 2.69 log_add_exp2
+### 2.71 log_add_exp2
 
 #### 接口签名
 
@@ -3231,7 +3320,7 @@ torch.ops.ops_multimodal_fusion.log_add_exp2(Tensor a, Tensor b) -> Tensor
 - 测试文件：`tests/log_add_exp2/test_log_add_exp2.py`
 
 ---
-### 2.70 log_normal
+### 2.72 log_normal
 
 #### 接口签名
 
@@ -3279,7 +3368,7 @@ torch.ops.ops_multimodal_fusion.log_normal(Tensor x, float mean=1.0, float std=2
 - 测试文件：`tests/log_normal/test_log_normal.py`
 
 ---
-### 2.71 logcumsumexp
+### 2.73 logcumsumexp
 
 #### 接口签名
 
@@ -3325,7 +3414,7 @@ torch.ops.ops_multimodal_fusion.logcumsumexp(Tensor x, int dim) -> Tensor
 - 测试文件：`tests/logcumsumexp/test_logcumsumexp.py`
 
 ---
-### 2.72 logicalxor
+### 2.74 logicalxor
 
 #### 接口签名
 
@@ -3370,7 +3459,7 @@ torch.ops.ops_multimodal_fusion.logicalxor(Tensor x, Tensor y) -> Tensor
 - 测试文件：`tests/logicalxor/test_logicalxor.py`
 
 ---
-### 2.73 logit
+### 2.75 logit
 
 #### 接口签名
 
@@ -3416,7 +3505,7 @@ logit（对数几率）函数，logit(x) = ln(x / (1 - x))；给定 eps 时先�
 - 测试文件：`tests/logit/test_logit.py`
 
 ---
-### 2.74 logndtr
+### 2.76 logndtr
 
 #### 接口签名
 
@@ -3460,7 +3549,7 @@ torch.ops.ops_multimodal_fusion.logndtr(Tensor x) -> Tensor
 - 测试文件：`tests/logndtr/test_logndtr.py`
 
 ---
-### 2.75 lstm_cell
+### 2.77 lstm_cell
 
 #### 接口签名
 
@@ -3511,7 +3600,7 @@ torch.ops.ops_multimodal_fusion.lstm_cell(Tensor input, Tensor hx, Tensor cx, Te
 - 测试文件：`tests/lstm_cell/test_lstm_cell.py`
 
 ---
-### 2.76 make_per_tensor_quantized
+### 2.78 make_per_tensor_quantized
 
 #### 接口签名
 
@@ -3559,7 +3648,7 @@ torch.ops.ops_multimodal_fusion.make_per_tensor_quantized(Tensor x, float scale,
 - 测试文件：`tests/make_per_tensor_quantized/test_make_per_tensor_quantized.py`
 
 ---
-### 2.77 matrix_exp_util
+### 2.79 matrix_exp_util
 
 #### 接口签名
 
@@ -3605,7 +3694,7 @@ torch.ops.ops_multimodal_fusion.matrix_exp_util(Tensor input, Tensor coefficient
 - 测试文件：`tests/matrix_exp_util/test_matrix_exp_util.py`
 
 ---
-### 2.78 max
+### 2.80 max
 
 #### 接口签名
 
@@ -3651,7 +3740,7 @@ torch.ops.ops_multimodal_fusion.max_dim(Tensor x, int dim, bool keepdim) -> (Ten
 - 测试文件：`tests/max/test_max.py`
 
 ---
-### 2.79 max_unpool2d
+### 2.81 max_unpool2d
 
 #### 接口签名
 
@@ -3701,7 +3790,7 @@ torch.ops.ops_multimodal_fusion.max_unpool2d(Tensor input, Tensor indices, int[2
 - 测试文件：`tests/max_unpool2d/test_max_unpool2d.py`
 
 ---
-### 2.80 max_unpool3d
+### 2.82 max_unpool3d
 
 #### 接口签名
 
@@ -3751,7 +3840,7 @@ torch.ops.ops_multimodal_fusion.max_unpool3d(Tensor input, Tensor indices, int[3
 - 测试文件：`tests/max_unpool3d/test_max_unpool3d.py`
 
 ---
-### 2.81 mean
+### 2.83 mean
 
 #### 接口签名
 
@@ -3798,7 +3887,7 @@ torch.ops.ops_multimodal_fusion.mean(Tensor x, int dim, bool keepdim) -> Tensor
 - 测试文件：`tests/mean/test_mean.py`
 
 ---
-### 2.82 mode
+### 2.84 mode
 
 #### 接口签名
 
@@ -3846,7 +3935,7 @@ torch.ops.ops_multimodal_fusion.mode(Tensor x, int dim, bool keepdim) -> (Tensor
 - 测试文件：`tests/mode/test_mode.py`
 
 ---
-### 2.83 modified_bessel_k0
+### 2.85 modified_bessel_k0
 
 #### 接口签名
 
@@ -3890,7 +3979,7 @@ torch.ops.ops_multimodal_fusion.modified_bessel_k0(Tensor x) -> Tensor
 - 测试文件：`tests/modified_bessel_k0/test_modified_bessel_k0.py`
 
 ---
-### 2.84 modified_bessel_k1
+### 2.86 modified_bessel_k1
 
 #### 接口签名
 
@@ -3934,7 +4023,7 @@ torch.ops.ops_multimodal_fusion.modified_bessel_k1(Tensor x) -> Tensor
 - 测试文件：`tests/modified_bessel_k1/test_modified_bessel_k1.py`
 
 ---
-### 2.85 mul
+### 2.87 mul
 
 #### 接口签名
 
@@ -3981,7 +4070,7 @@ torch.ops.ops_multimodal_fusion.mul(Tensor x, Tensor y) -> Tensor
 - 测试文件：`tests/mul/test_mul.py`
 
 ---
-### 2.86 multi_margin_loss
+### 2.88 multi_margin_loss
 
 #### 接口签名
 
@@ -4031,7 +4120,7 @@ torch.ops.ops_multimodal_fusion.multi_margin_loss(Tensor input, Tensor target, S
 - 测试文件：`tests/multi_margin_loss/test_multi_margin_loss.py`
 
 ---
-### 2.87 multilabel_margin_loss
+### 2.89 multilabel_margin_loss
 
 #### 接口签名
 
@@ -4078,7 +4167,7 @@ torch.ops.ops_multimodal_fusion.multilabel_margin_loss(Tensor input, Tensor targ
 - 测试文件：`tests/multilabel_margin_loss/test_multilabel_margin_loss.py`
 
 ---
-### 2.88 multinomial
+### 2.90 multinomial
 
 #### 接口签名
 
@@ -4126,7 +4215,7 @@ torch.ops.ops_multimodal_fusion.multinomial(Tensor x, int num_samples, bool repl
 - 测试文件：`tests/multinomial/test_multinomial.py`
 
 ---
-### 2.89 nested_add_pad
+### 2.91 nested_add_pad
 
 #### 接口签名
 
@@ -4175,7 +4264,7 @@ torch.ops.ops_multimodal_fusion.nested_add_pad(Tensor values, Tensor offsets, in
 - 测试文件：`tests/nested_add_pad/test_nested_add_pad.py`
 
 ---
-### 2.90 nested_binary_op
+### 2.92 nested_binary_op
 
 #### 接口签名
 
@@ -4241,7 +4330,7 @@ print(result.shape)   # torch.Size([5, 4])
 - 测试文件：`tests/nested_binary_op/test_nested_binary_op.py`
 
 ---
-### 2.91 nested_bmm
+### 2.93 nested_bmm
 
 #### 接口签名
 
@@ -4288,7 +4377,7 @@ torch.ops.ops_multimodal_fusion.nested_bmm(Tensor a_values, Tensor b_values, Ten
 - 测试文件：`tests/nested_bmm/test_nested_bmm.py`
 
 ---
-### 2.92 nested_remove_pad
+### 2.94 nested_remove_pad
 
 #### 接口签名
 
@@ -4335,7 +4424,7 @@ torch.ops.ops_multimodal_fusion.nested_remove_pad(Tensor padded, Tensor lengths)
 - 测试文件：`tests/nested_remove_pad/test_nested_remove_pad.py`
 
 ---
-### 2.93 nextafter
+### 2.95 nextafter
 
 #### 接口签名
 
@@ -4380,7 +4469,7 @@ torch.ops.ops_multimodal_fusion.nextafter(Tensor a, Tensor b) -> Tensor
 - 测试文件：`tests/nextafter/test_nextafter.py`
 
 ---
-### 2.94 norm
+### 2.96 norm
 
 #### 接口签名
 
@@ -4427,7 +4516,7 @@ torch.ops.ops_multimodal_fusion.norm(Tensor x, Scalar p, int dim, bool keepdim) 
 - 测试文件：`tests/norm/test_norm.py`
 
 ---
-### 2.95 pdist
+### 2.97 pdist
 
 #### 接口签名
 
@@ -4474,7 +4563,7 @@ torch.ops.ops_multimodal_fusion.pdist(Tensor input, float p=2.0) -> Tensor
 - 测试文件：`tests/pdist/test_pdist.py`
 
 ---
-### 2.96 pdist_backward
+### 2.98 pdist_backward
 
 #### 接口签名
 
@@ -4523,7 +4612,7 @@ torch.ops.ops_multimodal_fusion.pdist_backward(Tensor grad, Tensor input, float 
 - 测试文件：`tests/pdist_backward/test_pdist_backward.py`
 
 ---
-### 2.97 poisson
+### 2.99 poisson
 
 #### 接口签名
 
@@ -4569,7 +4658,7 @@ torch.ops.ops_multimodal_fusion.poisson(Tensor x, int seed=0) -> Tensor
 - 测试文件：`tests/poisson/test_poisson.py`
 
 ---
-### 2.98 polar
+### 2.100 polar
 
 #### 接口签名
 
@@ -4615,7 +4704,7 @@ torch.ops.ops_multimodal_fusion.polar(Tensor abs, Tensor angle) -> Tensor
 - 测试文件：`tests/polar/test_polar.py`
 
 ---
-### 2.99 polygamma
+### 2.101 polygamma
 
 #### 接口签名
 
@@ -4660,7 +4749,7 @@ torch.ops.ops_multimodal_fusion.polygamma(Tensor x, int n) -> Tensor
 - 测试文件：`tests/polygamma/test_polygamma.py`
 
 ---
-### 2.100 put
+### 2.102 put
 
 #### 接口签名
 
@@ -4709,7 +4798,7 @@ torch.ops.ops_multimodal_fusion.put(Tensor self, Tensor index, Tensor source, bo
 - 测试文件：`tests/put/test_put.py`
 
 ---
-### 2.101 quantized_relu
+### 2.103 quantized_relu
 
 #### 接口签名
 
@@ -4756,7 +4845,7 @@ torch.ops.ops_multimodal_fusion.quantized_relu(Tensor x, int zero_point) -> Tens
 - 测试文件：`tests/quantized_relu/test_quantized_relu.py`
 
 ---
-### 2.102 rms_norm_gated
+### 2.104 rms_norm_gated
 
 #### 接口签名
 
@@ -4805,7 +4894,7 @@ torch.ops.ops_multimodal_fusion.rms_norm_gated(Tensor hidden_states, Tensor gate
 - 测试文件：`tests/rms_norm_gated/test_rms_norm_gated.py`
 
 ---
-### 2.103 rsqrt
+### 2.105 rsqrt
 
 #### 接口签名
 
@@ -4850,7 +4939,7 @@ torch.ops.ops_multimodal_fusion.rsqrt(Tensor x) -> Tensor
 - 测试文件：`tests/rsqrt/test_rsqrt.py`
 
 ---
-### 2.104 scaled_modified_bessel_k0
+### 2.106 scaled_modified_bessel_k0
 
 #### 接口签名
 
@@ -4894,7 +4983,7 @@ torch.ops.ops_multimodal_fusion.scaled_modified_bessel_k0(Tensor x) -> Tensor
 - 测试文件：`tests/scaled_modified_bessel_k0/test_scaled_modified_bessel_k0.py`
 
 ---
-### 2.105 scaled_modified_bessel_k1
+### 2.107 scaled_modified_bessel_k1
 
 #### 接口签名
 
@@ -4938,7 +5027,7 @@ torch.ops.ops_multimodal_fusion.scaled_modified_bessel_k1(Tensor x) -> Tensor
 - 测试文件：`tests/scaled_modified_bessel_k1/test_scaled_modified_bessel_k1.py`
 
 ---
-### 2.106 searchsorted
+### 2.108 searchsorted
 
 #### 接口签名
 
@@ -4985,7 +5074,7 @@ torch.ops.ops_multimodal_fusion.searchsorted(Tensor sorted_sequence, Tensor valu
 - 测试文件：`tests/searchsorted/test_searchsorted.py`
 
 ---
-### 2.107 shifted_chebyshev_polynomial_t
+### 2.109 shifted_chebyshev_polynomial_t
 
 #### 接口签名
 
@@ -5030,7 +5119,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_t(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_t/test_shifted_chebyshev_polynomial_t.py`
 
 ---
-### 2.108 shifted_chebyshev_polynomial_u
+### 2.110 shifted_chebyshev_polynomial_u
 
 #### 接口签名
 
@@ -5075,7 +5164,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_u(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_u/test_shifted_chebyshev_polynomial_u.py`
 
 ---
-### 2.109 shifted_chebyshev_polynomial_v
+### 2.111 shifted_chebyshev_polynomial_v
 
 #### 接口签名
 
@@ -5120,7 +5209,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_v(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_v/test_shifted_chebyshev_polynomial_v.py`
 
 ---
-### 2.110 shifted_chebyshev_polynomial_w
+### 2.112 shifted_chebyshev_polynomial_w
 
 #### 接口签名
 
@@ -5165,7 +5254,7 @@ torch.ops.ops_multimodal_fusion.shifted_chebyshev_polynomial_w(Tensor x, Tensor 
 - 测试文件：`tests/shifted_chebyshev_polynomial_w/test_shifted_chebyshev_polynomial_w.py`
 
 ---
-### 2.111 sigmoid
+### 2.113 sigmoid
 
 #### 接口签名
 
@@ -5210,7 +5299,7 @@ torch.ops.ops_multimodal_fusion.sigmoid(Tensor x) -> Tensor
 - 测试文件：`tests/sigmoid/test_sigmoid.py`
 
 ---
-### 2.112 sin
+### 2.114 sin
 
 #### 接口签名
 
@@ -5255,7 +5344,7 @@ torch.ops.ops_multimodal_fusion.sin(Tensor x) -> Tensor
 - 测试文件：`tests/sin/test_sin.py`
 
 ---
-### 2.113 sinc
+### 2.115 sinc
 
 #### 接口签名
 
@@ -5300,7 +5389,7 @@ torch.ops.ops_multimodal_fusion.sinc(Tensor x) -> Tensor
 - 测试文件：`tests/sinc/test_sinc.py`
 
 ---
-### 2.114 spherical_bessel_j0
+### 2.116 spherical_bessel_j0
 
 #### 接口签名
 
@@ -5344,7 +5433,7 @@ torch.ops.ops_multimodal_fusion.spherical_bessel_j0(Tensor x) -> Tensor
 - 测试文件：`tests/spherical_bessel_j0/test_spherical_bessel_j0.py`
 
 ---
-### 2.115 sqrt
+### 2.117 sqrt
 
 #### 接口签名
 
@@ -5389,7 +5478,7 @@ torch.ops.ops_multimodal_fusion.sqrt(Tensor x) -> Tensor
 - 测试文件：`tests/sqrt/test_sqrt.py`
 
 ---
-### 2.116 sum
+### 2.118 sum
 
 #### 接口签名
 
@@ -5437,7 +5526,7 @@ torch.ops.ops_multimodal_fusion.sum(Tensor x, int dim, bool keepdim) -> Tensor
 - 测试文件：`tests/sum/test_sum.py`
 
 ---
-### 2.117 swi_glu
+### 2.119 swi_glu
 
 #### 接口签名
 
@@ -5483,7 +5572,7 @@ SwiGLU 激活：将输入沿最后一维对半切分为 a、b，计算 `y = silu
 - 测试文件：`tests/swi_glu/test_swi_glu.py`
 
 ---
-### 2.118 take
+### 2.120 take
 
 #### 接口签名
 
@@ -5530,7 +5619,7 @@ torch.ops.ops_multimodal_fusion.take(Tensor self, Tensor index) -> Tensor
 - 测试文件：`tests/take/test_take.py`
 
 ---
-### 2.119 tril_indices
+### 2.121 tril_indices
 
 #### 接口签名
 
@@ -5578,7 +5667,7 @@ torch.ops.ops_multimodal_fusion.tril_indices(int row, int col, int offset, bool 
 - 测试文件：`tests/tril_indices/test_tril_indices.py`
 
 ---
-### 2.120 triu_indices
+### 2.122 triu_indices
 
 #### 接口签名
 
@@ -5626,7 +5715,7 @@ torch.ops.ops_multimodal_fusion.triu_indices(int row, int col, int offset, bool 
 - 测试文件：`tests/triu_indices/test_triu_indices.py`
 
 ---
-### 2.121 unpack_pivots
+### 2.123 unpack_pivots
 
 #### 接口签名
 
@@ -5672,7 +5761,7 @@ torch.ops.ops_multimodal_fusion.unpack_pivots(Tensor pivots, int perm_size) -> T
 - 测试文件：`tests/unpack_pivots/test_unpack_pivots.py`
 
 ---
-### 2.122 upsample_linear1d
+### 2.124 upsample_linear1d
 
 #### 接口签名
 
@@ -5737,7 +5826,7 @@ print(result.dtype)   # torch.float32
 - 测试文件：`tests/upsample_linear1d/test_upsample_linear1d.py`
 
 ---
-### 2.123 upsample_nearest1d
+### 2.125 upsample_nearest1d
 
 #### 接口签名
 
@@ -5784,7 +5873,7 @@ torch.ops.ops_multimodal_fusion.upsample_nearest1d(Tensor input, int output_size
 - 测试文件：`tests/upsample_nearest1d/test_upsample_nearest1d.py`
 
 ---
-### 2.124 upsample_trilinear3d
+### 2.126 upsample_trilinear3d
 
 #### 接口签名
 
@@ -5834,7 +5923,7 @@ torch.ops.ops_multimodal_fusion.upsample_trilinear3d(Tensor input, int[3] output
 - 测试文件：`tests/upsample_trilinear3d/test_upsample_trilinear3d.py`
 
 ---
-### 2.125 weight_norm
+### 2.127 weight_norm
 
 #### 接口签名
 
@@ -5881,7 +5970,7 @@ torch.ops.ops_multimodal_fusion.weight_norm(Tensor v, Tensor g, int dim) -> Tens
 - 测试文件：`tests/weight_norm/test_weight_norm.py`
 
 ---
-### 2.126 zeta
+### 2.128 zeta
 
 #### 接口签名
 
