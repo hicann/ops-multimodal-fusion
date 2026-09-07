@@ -153,6 +153,10 @@ _lib.define(
     "furthest_point_sample(Tensor points_xyz, int num_points) -> Tensor"
 )
 
+_lib.define(
+    "ball_query(Tensor xyz, Tensor center_xyz, float max_radius, float min_radius=0.0, int sample_num=16) -> Tensor"
+)
+
 
 # ------------------------------------------------
 # pair / relation 相关算子
