@@ -44,7 +44,7 @@ Usage:
   $0 -h | --help                    Show this help.
 
 Available ops:
-$(find applications -mindepth 2 -maxdepth 2 -type d 2>/dev/null | sed 's|applications/[^/]*/|  |' | sort)
+$(find applications -mindepth 2 -maxdepth 3 -type d 2>/dev/null | grep -E 'applications/[^/]+/(ops/)?[^/]+$' | grep -v '/ops$' | sed 's|applications/[^/]*/|  |; s|^  ops/||' | sort)
 EOF
 }
 
@@ -65,7 +65,7 @@ parse_ops_arg() {
     for _p in "${OP_NAMES[@]}"; do
         local _found=0
         for _cat in applications/*/; do
-            if [[ -d "${_cat}${_p}/${ARCH_DIR}" ]]; then
+            if [[ -d "${_cat}${_p}/${ARCH_DIR}" ]] || [[ -d "${_cat}ops/${_p}/${ARCH_DIR}" ]]; then
                 _found=1
                 break
             fi
@@ -93,20 +93,34 @@ parse_filelist() {
         [[ -z "$_line" ]] && continue
         _line="${_line#./}"
 
-        if [[ "$_line" =~ ^applications/([^/]+)/([^/]+)/arch22/ ]]; then
+        if [[ "$_line" =~ ^applications/([^/]+)/ops/([^/]+)/arch22/ ]]; then
+            TOUCHED_ARCH22=1
+            ARCH22_OPS+=("${BASH_REMATCH[2]}")
+        elif [[ "$_line" =~ ^applications/([^/]+)/ops/([^/]+)/arch35/ ]]; then
+            TOUCHED_ARCH35=1
+            ARCH35_OPS+=("${BASH_REMATCH[2]}")
+        elif [[ "$_line" =~ ^applications/([^/]+)/([^/]+)/arch22/ ]]; then
             TOUCHED_ARCH22=1
             ARCH22_OPS+=("${BASH_REMATCH[2]}")
         elif [[ "$_line" =~ ^applications/([^/]+)/([^/]+)/arch35/ ]]; then
             TOUCHED_ARCH35=1
             ARCH35_OPS+=("${BASH_REMATCH[2]}")
+        elif [[ "$_line" =~ ^applications/([^/]+)/ops/([^/]+)/ ]]; then
+            # Op-level common file inside an ops/ container (outside arch*/) — build for all its SoCs.
+            TOUCHED_ARCH22=1
+            TOUCHED_ARCH35=1
+            _cat="${BASH_REMATCH[1]}"
+            _op="${BASH_REMATCH[2]}"
+            [[ -d "applications/${_cat}/ops/${_op}/arch22" ]] && ARCH22_OPS+=("$_op")
+            [[ -d "applications/${_cat}/ops/${_op}/arch35" ]] && ARCH35_OPS+=("$_op")
         elif [[ "$_line" =~ ^applications/([^/]+)/([^/]+)/ ]]; then
             # Op-level common file (outside arch*/) — build for all its supported SoCs.
             TOUCHED_ARCH22=1
             TOUCHED_ARCH35=1
             _cat="${BASH_REMATCH[1]}"
             _op="${BASH_REMATCH[2]}"
-            [[ -d "applications/${_cat}/${_op}/arch22" ]] && ARCH22_OPS+=("$_op")
-            [[ -d "applications/${_cat}/${_op}/arch35" ]] && ARCH35_OPS+=("$_op")
+            [[ -d "applications/${_cat}/${_op}/arch22" || -d "applications/${_cat}/ops/${_op}/arch22" ]] && ARCH22_OPS+=("$_op")
+            [[ -d "applications/${_cat}/${_op}/arch35" || -d "applications/${_cat}/ops/${_op}/arch35" ]] && ARCH35_OPS+=("$_op")
         else
             # Global common file (build.sh, CMakeLists.txt, etc.) — one op per arch to verify the flow.
             _global=1
@@ -120,7 +134,7 @@ parse_filelist() {
         ARCH22_OPS=()
         ARCH35_OPS=()
         local _d
-        for _d in applications/*/*/; do
+        for _d in applications/*/*/*/ applications/*/*/; do
             _op="$(basename "$_d")"
             [[ -d "${_d}arch22" && ${#ARCH22_OPS[@]} -eq 0 ]] && ARCH22_OPS+=("$_op")
             [[ -d "${_d}arch35" && ${#ARCH35_OPS[@]} -eq 0 ]] && ARCH35_OPS+=("$_op")
