@@ -26,5 +26,6 @@ mmdet3d:
     - applications/autonomous_driving/common/kitti_eval/
 
 OpenPCDet:
+  version: 0.6.0
   license: Apache-2.0
   path: applications/autonomous_driving/common/pcdet_stub/
