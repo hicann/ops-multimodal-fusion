@@ -279,10 +279,19 @@ class PointCloudFeatureInterface(nn.Module):
             try:
                 # 使用 torch.enable_grad 来确保梯度流可以继续
                 with torch.enable_grad():
-                    preds = self.extractor.predict(
-                        batch_inputs_dict,
-                        batch_data_samples
-                    )
+                    # 两阶段检测器（Part-A2 等）优先用 rpn_head 取 proposal：
+                    # 完整 predict 会走 roi_head 的 RoIAwarePool3d（roiaware_pool3d_forward 为
+                    # CUDA-only，NPU 不可用）；rpn_head.predict 只依赖 backbone 特征，NPU 可跑。
+                    if hasattr(self.extractor, 'rpn_head'):
+                        preds = self.extractor.rpn_head.predict(
+                            feats,
+                            batch_data_samples
+                        )
+                    else:
+                        preds = self.extractor.predict(
+                            batch_inputs_dict,
+                            batch_data_samples
+                        )
 
                 # 解析检测框
                 flat_rois_list = []
@@ -293,10 +302,12 @@ class PointCloudFeatureInterface(nn.Module):
                 for b, pred in enumerate(preds):
                     if hasattr(pred, "pred_instances_3d"):
                         inst = pred.pred_instances_3d
-                        boxes = inst.bboxes_3d
-                        if hasattr(boxes, "tensor"):
-                            boxes = boxes.tensor
-                        if boxes.numel() > 0:
+                    else:
+                        inst = pred  # rpn_head.predict 直接返回 InstanceData
+                    boxes = inst.bboxes_3d
+                    if hasattr(boxes, "tensor"):
+                        boxes = boxes.tensor
+                    if boxes.numel() > 0:
                             flat_rois_list.append(boxes)
                             flat_batch_idx_list.append(
                                 torch.full((boxes.shape[0],), b,

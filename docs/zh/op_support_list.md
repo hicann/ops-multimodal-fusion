@@ -58,6 +58,7 @@
 | gamma | `torch.ops.ops_multimodal_fusion.gamma(Tensor alpha, int seed=0) -> Tensor` | - | - | ✓ |
 | gelu | `torch.ops.ops_multimodal_fusion.gelu(Tensor x) -> Tensor` | - | - | ✓ |
 | geometric | `torch.ops.ops_multimodal_fusion.geometric(Tensor x, float p, int seed=0) -> Tensor` | - | - | ✓ |
+| get_indice_pairs_subm_lookup | `torch.ops.ops_multimodal_fusion.get_indice_pairs_subm_lookup(Tensor coords, int[] spatial_shape, int[] ksize, int[] dilation, Tensor sorted_enc, Tensor sorted_row) -> Tensor` | - | - | ✓ |
 | gru_cell | `torch.ops.ops_multimodal_fusion.gru_cell(Tensor input, Tensor hx, Tensor weight_ih, Tensor weight_hh, Tensor? bias_ih=None, Tensor? bias_hh=None) -> Tensor` | - | - | ✓ |
 | hermite_polynomial_h | `torch.ops.ops_multimodal_fusion.hermite_polynomial_h(Tensor x, Tensor n) -> Tensor` | - | - | ✓ |
 | hermite_polynomial_he | `torch.ops.ops_multimodal_fusion.hermite_polynomial_he(Tensor x, Tensor n) -> Tensor` | - | - | ✓ |
@@ -66,6 +67,7 @@
 | igammac | `torch.ops.ops_multimodal_fusion.igammac(Tensor a, Tensor x) -> Tensor` | - | - | ✓ |
 | index_copy | `torch.ops.ops_multimodal_fusion.index_copy(Tensor self, int dim, Tensor index, Tensor source) -> Tensor` | - | - | ✓ |
 | index_reduce | `torch.ops.ops_multimodal_fusion.index_reduce(Tensor self, int dim, Tensor index, Tensor source, str reduce, bool include_self=True) -> Tensor` | - | - | ✓ |
+| indice_conv | `torch.ops.ops_multimodal_fusion.indice_conv(Tensor gathered, Tensor filters, Tensor k_idx, Tensor s_idx, int P) -> Tensor` | - | - | ✓ |
 | int_repr | `torch.ops.ops_multimodal_fusion.int_repr(Tensor x) -> Tensor` | - | - | ✓ |
 | kaiserwindow | `torch.ops.ops_multimodal_fusion.kaiserwindow(Tensor x, float beta, int window_length, bool periodic) -> Tensor` | - | - | ✓ |
 | kthvalue | `torch.ops.ops_multimodal_fusion.kthvalue(Tensor x, int k, int dim, bool keepdim) -> (Tensor values, Tensor indices)` | - | - | ✓ |

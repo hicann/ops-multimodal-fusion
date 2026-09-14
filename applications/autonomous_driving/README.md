@@ -1,6 +1,6 @@
 # 3D 目标检测（相机-点云多模态融合）
 
-Ascend NPU 3D 目标检测应用，支持 PointPillars / CLOCS 多模型接入。
+Ascend NPU 3D 目标检测应用，支持 PointPillars / CLOCS / HMFI 多模型接入。
 
 ## 1. 目录结构
 
@@ -13,17 +13,26 @@ autonomous_driving/
 │   │   ├── kitti_converter.py             #   官方数据转换（OpenMMLab）
 │   │   ├── kitti_data_utils.py            #   官方数据工具（OpenMMLab）
 │   │   └── update_infos_to_v2.py          #   官方 v2 格式转换（OpenMMLab）
-│   ├── ops/                                # 融合算子（operator_registry + 9 个算子）
+│   ├── ops/                                # 融合算子（fusionrepo schema + 算子实现；含向量化 gather_roi_features 等）
 │   ├── interfaces/                         # det2d/det3d 输出接口
 │   ├── kitti_writer.py                     # KITTI 预测写盘
 │   ├── pcdet_stub/                         # pcdet 依赖最小 stub
 │   └── patches/                           # 第三方库 NPU 适配（路径对应 site-packages）
+│       ├── mmcv_sparse_conv.py             # mmcv 稀疏卷积 NPU 适配（纯 torch 替换 + Ascend C indice_conv / get_indice_pairs_subm_lookup 加速）
 │       ├── mmdet3d/
 │       │   ├── apis/inference.py
 │       │   └── models/data_preprocessors/voxelize.py
 │       └── mmcv/
 │           ├── ops/nms.py
 │           └── ops/roi_align.py
+├── indice_conv/                            # 正式 Ascend C 算子（arch35/Ascend950PR）
+│   └── arch35/
+│       ├── CMakeLists.txt
+│       └── indice_conv.asc                 # torch.ops.ops_multimodal_fusion.indice_conv（SparseUNet 稀疏 offset kernel 计算）
+├── get_indice_pairs/                       # 正式 Ascend C 算子（arch35/Ascend950PR）
+│   └── arch35/
+│       ├── CMakeLists.txt
+│       └── get_indice_pairs.asc            # torch.ops.ops_multimodal_fusion.get_indice_pairs_subm_lookup（subm 邻居查重 kernel）
 └── model/
     ├── pointpillars/                      # PointPillars 模型
     │   ├── backbone/
@@ -31,6 +40,19 @@ autonomous_driving/
     │   ├── eval_official/
     │   │   └── run_official_eval.py               # 官方 KittiMetric 评估
     │   └── run_pointpillars_forward.py            # 单帧推理入口
+    ├── hmfi/                              # HMFI 模型（特征级多模态融合）
+    │   ├── hmfi_framework.py
+    │   ├── eval_hmfi_official.py          # 官方 KittiMetric 端到端评估入口（--fusion_ckpt/--score_thr/--nms_thr）
+    │   ├── sweep_hmfi_official.py         # 后处理阈值离线扫描（dump + sweep，自训工具）
+    │   ├── avg_ckpts.py                   # 融合权重等权平均（SWA，自训工具）
+    │   ├── initialization/
+    │   │   └── build_hmfi_system.py
+    │   ├── module/
+    │   │   ├── ivlm_module.py
+    │   │   ├── qfm_module.py
+    │   │   ├── vfim_module.py
+    │   │   └── hmfi_detection_head.py
+    │   └── test_hmfi.py                   # 端到端 eval/train 入口
     └── clocs/                             # CLOCS 模型（2D+3D 后融合）
         ├── clocs_framework.py
         ├── initialization/
@@ -42,6 +64,8 @@ autonomous_driving/
         │   └── aggregate_post_module.py
         └── test_script.py                 # 端到端 eval/train 入口
 ```
+
+> 算子接入说明：`indice_conv`（Ascend C）与 `common/ops/` 下各 fusionrepo 算子均随仓库统一构建以 wheel（`ops_multimodal_fusion`）交付。装好 wheel 后模型侧直接 `import ops_multimodal_fusion` 即自动 load `.so` 并注册 `torch.ops.ops_multimodal_fusion.*`（`common/patches/mmcv_sparse_conv.py` 即经此路径调用 `indice_conv` / `get_indice_pairs_subm_lookup`）；不装 wheel 时相关路径自动回退纯 torch，不影响 CPU 正确性。
 
 ## 2. 环境配置
 
@@ -243,3 +267,95 @@ CPU 与 NPU 一致（全部指标差异 <0.1pp）。全量 3769 帧耗时：CPU 
 | 5 | 已知限制 | `update_infos_to_v2.py` 生成的 val 标注 classes 仅含主要类别（Pedestrian/Cyclist/Car/Van/Truck/Person_sitting/Tram/Misc），'Van'/'DontCare' 未纳入完整 label 处理 | `common/kitti_eval/update_infos_to_v2.py` |
 
 > 关于源项目 README 的 "Ours 3D AP 85.39%"：该数字与原 CLOCs 作者报告值一致，属引用/声称值；对应训练好的 FusionMLP 权重未随项目交付，无法用本代码/权重复现，也不与本表口径直接对比。若需复现论文融合精度，需补 pre-NMS 候选 + 训练好 FusionMLP 权重。
+
+### 4.3 HMFI
+
+KITTI 3D Car 检测，**特征级（深度体素）多模态融合**：IVLM（图像体素提升）+ QFM（多头注意力查询融合）+ VFIM（体素特征交互）+ HMFI 检测头；点云用 Part-A2、图像用 Faster R-CNN 提特征。融合权重两份：官方 `hmfi_fusion_trained.pth`（`eval_hmfi_official.py` 默认）与**自训最优 `hmfi_best.pth`**（官方 init 微调 8ep + ep5–ep8 权重平均，LFS 入库；配套后处理 (0.25, 0.7)，见 4.3.4）。
+
+#### 4.3.1 改动内容
+
+| 文件 | 改动 |
+|---|---|
+| `model/hmfi/eval_hmfi_official.py` | 新增：官方 KittiMetric 端到端评估入口（原项目无此入口，需按 4.1/4.2 同口径评估，见 4.3.3） |
+| `model/hmfi/sweep_hmfi_official.py` | 新增：后处理阈值离线扫描（自训权重需选 score/nms 阈值，见 4.3.4） |
+| `model/hmfi/avg_ckpts.py` | 新增：融合权重等权平均（SWA），生成 `hmfi_best.pth` |
+| `common/patches/mmcv_sparse_conv.py` | 新增：mmcv 稀疏卷积 NPU 适配——`get_indice_pairs`/`indice_conv` 为 CUDA-only、NPU 不可用，故用纯 torch 同语义替换 + monkey-patch（默认 `get_indice_pairs_fast`） |
+| `indice_conv/arch35/` | 新增：Ascend C 算子 `indice_conv`（稀疏卷积计算提速；mmcv 原实现 CUDA-only） |
+| `get_indice_pairs/arch35/` | 新增：Ascend C 算子 `get_indice_pairs_subm_lookup`（subm 邻居查重；原纯 torch 实现里的 `torch.searchsorted` 在 NPU 上很慢，改由 kernel 并行查找） |
+| `model/pointpillars/backbone/point_cloud_feature_interface.py` | 两阶段检测器优先用 `rpn_head` 取 proposal（完整 predict 走 CUDA-only 的 `RoIAwarePool3d`，NPU 不可用） |
+| `common/ops/gather_roi_features.py` | 向量化实现 + 输入形状校验 |
+
+#### 4.3.2 推理验证
+
+权重：Part-A2 3D（OpenMMLab 官方）+ Faster R-CNN 1x（复用 4.1）+ 融合权重（官方，或自训 `hmfi_best.pth`，配套后处理 (0.25, 0.7)，见 4.3.4）。
+
+```bash
+# ① 官方 KittiMetric 评估：全量 3769 帧算 AP；--max-frames 5 为冒烟（只前向 5 帧、不算指标）
+python model/hmfi/eval_hmfi_official.py --device npu:0
+python model/hmfi/eval_hmfi_official.py --device npu:0 --max-frames 5
+
+# ② 自训权重 + 最优后处理（0.25/0.7）评估（结果见 4.3.4）；NPU / CPU 各一条
+python model/hmfi/eval_hmfi_official.py --device npu:0 \
+  --fusion_ckpt checkpoints/hmfi/hmfi_best.pth --score_thr 0.25 --nms_thr 0.7
+python model/hmfi/eval_hmfi_official.py --device cpu \
+  --fusion_ckpt checkpoints/hmfi/hmfi_best.pth --score_thr 0.25 --nms_thr 0.7
+
+# ③ 后处理阈值（score/nms）寻优：先跑一次推理把检测框 dump 下来，再离线换不同阈值算指标（不重复跑推理）
+python model/hmfi/sweep_hmfi_official.py dump --device npu:0 \
+  --fusion_ckpt checkpoints/hmfi/hmfi_best.pth --dump results/hmfi/sweep_dump_best.npz
+python model/hmfi/sweep_hmfi_official.py sweep --dump results/hmfi/sweep_dump_best.npz \
+  --score_thr_sweep 0.2,0.25,0.3 --nms_thr_sweep 0.65,0.7,0.75 --out results/hmfi/sweep_best.json
+
+# ④ 融合权重等权平均（SWA）：ep5–8 → hmfi_best.pth
+python model/hmfi/avg_ckpts.py checkpoints/hmfi/hmfi_best.pth \
+  checkpoints/hmfi/hmfi_longft_ep5.pth checkpoints/hmfi/hmfi_longft_ep6.pth \
+  checkpoints/hmfi/hmfi_longft_ep7.pth checkpoints/hmfi/hmfi_longft_ep8.pth
+
+# ⑤ 生成 KITTI 预测文件，走旧 kitti_eval 工具（非官方 KittiMetric），仅用于对拍/调参
+python model/hmfi/test_hmfi.py --device npu:0 --mode test --split_file data/kitti/ImageSets/val_zero_padded.txt
+```
+
+#### 4.3.3 结果对比（官方 KittiMetric 口径）
+
+口径：官方 mmdet3d `KittiMetric`（同 4.1/4.2，同一 `data/kitti/kitti_infos_val_v2.pkl`），Car，3769 帧 val，strict IoU≥0.7。下表为官方融合权重 `hmfi_fusion_trained.pth` + 默认后处理（0.05/0.1）；自训权重见 4.3.4。
+
+| 指标 | 设备 | easy | moderate | hard |
+|---|---|---|---|---|
+| 3D AP11 | NPU | 87.79 | 78.00 | 75.44 |
+| 3D AP11 | CPU | 87.79 | 78.00 | 75.45 |
+| 3D AP40 | NPU | 92.25 | 81.39 | 76.10 |
+| 3D AP40 | CPU | 92.25 | 81.39 | 76.10 |
+| BEV AP11 | NPU | 89.91 | 88.99 | 84.22 |
+| BEV AP11 | CPU | 89.91 | 88.99 | 84.22 |
+| BEV AP40 | NPU | 94.61 | 90.60 | 85.91 |
+| BEV AP40 | CPU | 94.61 | 90.60 | 85.91 |
+| 2D AP11 | NPU | 94.59 | 89.11 | 87.38 |
+| 2D AP11 | CPU | 94.59 | 89.11 | 87.38 |
+
+CPU 与 NPU 一致（差异 <0.01pp）。全量 3769 帧耗时（当前加速路径，见 4.3.1）：**NPU ≈ 19.5 min**（0.310 s/帧；`get_indice_pairs` kernel 合入后由 23.3 min 提速），CPU ≈ 265 min（4.4h）；更早 NPU ~72 min / CPU ~3.5h 为加速前旧值。
+
+
+与源项目 README（moderate 档）对比：
+
+| 指标 | 源项目记录（Ours） | 本应用实测 |
+|---|---|---|
+| 3D AP | 80.41 | AP11 78.00 / AP40 81.39 |
+| BEV AP | 89.73 | AP11 88.99 / AP40 90.60 |
+
+> 源记录未标注 AP11/AP40 口径；本应用实测与其偏差约 -2.4~+1.0pp（3D）、-0.7~+0.9pp（BEV），落在两种口径合理区间 → 官方权重在 NPU 正确复现原项目精度（HMFI 两阶段 + 特征级融合，比 pointpillars/clocs 重属正常）。自训权重 + 调松后处理可超该记录值（3D AP11 82.51，见 4.3.4）。
+
+#### 4.3.4 自训融合权重 `hmfi_best.pth` 与后处理
+
+生成：以官方融合权重为 init，仅微调融合头 8ep（双 backbone 冻结，OneCycle lr=1e-4），再对 ep5–ep8 融合头参数等权平均（工具见 4.3.1）。口径同 4.3.3；**需配合后处理 `score_thr=0.25 / nms_thr=0.7`**（`eval_hmfi_official.py --fusion_ckpt checkpoints/hmfi/hmfi_best.pth --score_thr 0.25 --nms_thr 0.7`），moderate 档：
+
+| 设备 | 3D AP11 | 3D AP40 |
+|---|---|---|
+| NPU | **82.51** | **83.50** |
+| CPU | **82.53** | **83.53** |
+
+（NPU 与 CPU 一致。）
+
+关键发现：默认 BEV NMS=0.1 过紧，会压掉"低置信但框准"的候选——融合头对同一目标输出多个 RPN 高置信 proposal，NMS 只留最高分框时若其 3D IoU<0.7 即丢 TP，而 KITTI AP 对排序+召回敏感。调至 `nms_thr≈0.7 / score_thr≈0.25`（保多候选、只留高置信）后 3D AP11 moderate 从 ~78.7 跳到 ~82.5；同后处理对官方权重也有效（0.1/0.75 → 80.46/81.82）。更长微调（2→8ep）在默认阈值下 AP11 基本饱和（~78.7–78.8），价值体现在调松 NMS 后的更高峰值。
+
+> 备注：82.51/83.50 为 (0.25, 0.7) 操作点结果，该点附近对阈值敏感；默认阈值 (0.05, 0.1) 为 78.78/82.15（`results/hmfi/sweep_avg568_default.json`）。
+

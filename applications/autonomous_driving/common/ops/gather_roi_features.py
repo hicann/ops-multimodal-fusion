@@ -63,7 +63,22 @@ def _gather_roi_features_impl(
     voxel_coords: torch.Tensor,
     voxel_features: torch.Tensor
 ):
-    """向量化实现 (无 Python for 循环)"""
+    """向量化实现（无 Python for 循环）。
+
+    对输入做形状校验：非法输入给出清晰的 ValueError，而非晦涩的广播报错。
+    """
+    if rois.dim() != 2 or rois.shape[1] != 7:
+        raise ValueError("rois must have shape (num_rois, 7)")
+
+    if voxel_coords.dim() != 2 or voxel_coords.shape[1] != 3:
+        raise ValueError("voxel_coords must have shape (num_voxels, 3)")
+
+    if voxel_features.dim() != 2:
+        raise ValueError("voxel_features must have shape (num_voxels, num_channels)")
+
+    if voxel_coords.shape[0] != voxel_features.shape[0]:
+        raise ValueError("voxel_coords and voxel_features must have the same first dim")
+
     device = voxel_features.device
     dtype = voxel_features.dtype
 
